@@ -1,0 +1,131 @@
+---
+description: Engineering standards for Pallas (Next.js App Router frontend + Next.js Route Handlers backend). MUI + motion, Google Style, minimal comments with MARK/TODO/FIXME, Clean Architecture + Feature-Sliced Design. Includes Storybook workflow and import path rules.
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+## Goals
+
+- Keep a consistent, modern engineering baseline across the repo.
+- Make intent self-evident via naming, structure, and separation of concerns.
+- Optimize for maintainability, testability, and UX quality.
+
+## Naming Rules
+
+- Files and directories: kebab-case only (lowercase with hyphens). Example: `material-card.tsx`.
+- React components: PascalCase for component symbols, file stays kebab-case. Example: `MaterialCard` in `material-card.tsx`.
+- Variables, functions: camelCase. Types and interfaces: PascalCase with clear nouns.
+- Hooks: start with `use`. Example: `useMaterialUpload`.
+- Test files: mirror target name with `.test.ts` or `.test.tsx`.
+
+## Import Paths
+
+- Within the same feature module (under `src/features/<module>/**`), use related/relative imports.
+- Across modules (cross `features/` boundaries) and to shared layers, use absolute imports via the `@/` alias.
+- Keep imports ordered: Node/third-party, internal absolute, then relative. Avoid deep relative paths where `@/` is clearer.
+
+## React Components (MUI-first)
+
+- Prefer existing components; when creating new ones, base on MUI components.
+- Extract props to dedicated interfaces. Use `Readonly<Props>` in components to avoid accidental mutation.
+- Styling: prefer `sx` and theme tokens over ad-hoc CSS. Keep responsive design via breakpoints.
+
+## Animations and Transitions (motion)
+
+- Use `motion` (Framer Motion 12) as the default animation toolkit.
+- Compose simple variants; avoid deeply nested animations. Prefer spring presets for natural feel.
+- Server/SSR: ensure animations render without layout shift; guard expensive effects in `useEffect`.
+
+## Next.js (App Router) Practices
+
+- Performance
+
+  - Use `next/image` for images and `next/font` for fonts; prefer self-hosted fonts.
+  - Split bundles via `next/dynamic`. Use `ssr: false` only for browser-only components.
+  - Minimize client component size; keep business logic in server code.
+  - Stream with Suspense where it improves TTI and perceived performance.
+
+- MUI and SSR
+
+  - Use `@mui/material-nextjs` for SSR integration to avoid style flicker.
+  - Prefer theme tokens and `sx`; avoid global CSS where possible.
+
+## State Management
+
+- Default to Server Components; minimize client islands.
+- Scope Redux provider to the narrowest layout that needs it; avoid app-wide provider unless required.
+- Use Redux for UI and interaction state; do not mirror server-fetched data unnecessarily.
+- Prefer derived selectors and memoization to avoid re-renders.
+
+## Storybook (component-driven workflow)
+
+- Design props first, then write the Storybook story before wiring pages. Iterate on UI visually via stories.
+- Keep stories minimal for preview-only usage: define `meta`, `component`, and a small set of realistic `args`.
+- Prefer deterministic sample data and keep stories free of heavy network mocking.
+- Update stories whenever props change; stories are the living spec for the component surface.
+
+## Prompt Engineering
+
+- Define a single clear goal and expected output format. Prefer concise, outcome-first phrasing.
+- Provide precise file paths to read/edit and relevant interfaces or DTOs to anchor changes.
+- Include constraints that matter (style, SSR, types, performance). Avoid over-prescribing implementation.
+- Supply minimal, realistic examples (few-shot) when shaping APIs or component props.
+- Use separators to structure prompts: headings or triple backticks for context blocks.
+- Prefer positive guidance (what to do) over negative lists (what not to do).
+- Keep prompts self-contained: restate key constraints that must be honored.
+- Ask for small, verifiable increments; iterate based on diff/test feedback.
+- When code edits are needed, specify files and desired interfaces first; expect “edits” not “patches”.
+- For commands, request non-interactive flags and brief reasoning.
+
+### Recommended structure
+
+- Goal: <concise outcome>
+- Files: <paths to edit/read>
+- Context: <key types, interfaces, routes, or constraints>
+- Constraints: <style, SSR, types, performance>
+- Acceptance: <observable behaviors, tests, or screenshots>
+- Output: <e.g., edited files only + brief summary>
+
+### Tooling guidance (Cursor)
+
+- Read before writing. Cite exact files and limit scope.
+- Prefer semantic search first, then targeted reads.
+- Batch independent reads/queries; avoid serial drip calls.
+- After edits, run lint/tests and fix failures before closing.
+- For long-running commands, run in background; pass non-interactive flags.
+
+## Code Style
+
+- Follow Google Style Guide conventions for TypeScript/JavaScript.
+- Favor clarity over cleverness; short, purposeful functions with early returns.
+- No redundant comments. Convey intent via names, modules, and clear types.
+- Language: US English for code comments and commit messages.
+
+## Comments and Special Tags
+
+- Use concise, purposeful comments when necessary.
+- Allowed tags and format:
+  - `MARK: <short topic>` — draws attention to a noteworthy section.
+  - `TODO: <actionable next step>` — must include an owner or context when feasible.
+  - `FIXME: <known defect + hint>` — must link to issue or provide reproduction context.
+
+## Commit Messages
+
+- Use US English.
+- Keep subject lines concise; body explains the reasoning and impact.
+
+## Quality Gates
+
+- Type-safety first; explicit types at public boundaries.
+- Lint and format must pass.
+- Performance: avoid unnecessary re-renders; memoize where it pays off.
+
+## Review Checklist
+
+- Names clearly convey intent; file structure matches FSD/Clean Arch.
+- MUI used as base; animations implemented with `motion` and support reduced motion.
+- Minimal comments; when present, tags follow `MARK`/`TODO`/`FIXME`.
+- US English across comments and commits.
+- Intra-feature imports are relative; cross-feature/shared imports are absolute via `@/`.
+- Stories exist for interactive UI components and reflect current props.
