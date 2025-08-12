@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import MuiThemeProvider from "@/ui/mui-theme-provider";
-import { Demo, type DemoProps } from "@/ui/demo";
+import { Demo, type DemoProps } from '@/ui/demo';
+import MuiThemeProvider from '@/ui/mui-theme-provider';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
-  title: "UI/Demo",
+  title: 'UI/Demo',
   component: Demo,
   decorators: [
     (Story) => (
@@ -15,10 +15,10 @@ const meta = {
     ),
   ],
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
   argTypes: {
-    onAction: { action: "clicked" },
+    onAction: { action: 'clicked' },
   },
 } satisfies Meta<typeof Demo>;
 
@@ -27,19 +27,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
   args: {
-    title: "Hello Storybook",
-    description: "If you can see this card and click the button below, Storybook is working!",
-    ctaLabel: "Click me",
+    title: 'Hello Storybook',
+    description:
+      'If you can see this card and click the button below, Storybook is working!',
+    ctaLabel: 'Click me',
   } satisfies DemoProps,
 };
 
 export const Disabled: Story = {
   args: {
-    title: "Disabled state",
-    description: "Demonstrates the disabled button state.",
-    ctaLabel: "Can’t click",
+    title: 'Disabled state',
+    description: 'Demonstrates the disabled button state.',
+    ctaLabel: 'Can’t click',
     disabled: true,
   } satisfies DemoProps,
 };
-
-

@@ -1,8 +1,9 @@
-"use client";
+'use client';
 
-import { PropsWithChildren } from "react";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import theme from "../theme";
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { PropsWithChildren } from 'react';
+
+import theme from '../theme';
 
 export default function MuiThemeProvider({ children }: PropsWithChildren) {
   return (
@@ -12,5 +13,3 @@ export default function MuiThemeProvider({ children }: PropsWithChildren) {
     </ThemeProvider>
   );
 }
-
-

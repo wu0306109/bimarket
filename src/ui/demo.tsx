@@ -1,6 +1,13 @@
-"use client";
+'use client';
 
-import { Button, Card, CardActions, CardContent, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Stack,
+  Typography,
+} from '@mui/material';
 
 export interface DemoProps {
   title: string;
@@ -11,11 +18,11 @@ export interface DemoProps {
 }
 
 export function Demo({
-    title,
-    description,
-    ctaLabel = "Action",
-    disabled = false,
-    onAction,
+  title,
+  description,
+  ctaLabel = 'Action',
+  disabled = false,
+  onAction,
 }: Readonly<DemoProps>) {
   return (
     <Card sx={{ maxWidth: 420 }}>
@@ -39,5 +46,3 @@ export function Demo({
     </Card>
   );
 }
-
-

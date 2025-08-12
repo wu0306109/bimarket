@@ -35,6 +35,6 @@
       "args": ["dev", "-p", "6006"],
       "console": "integratedTerminal",
       "skipFiles": ["<node_internals>/**"]
-    },
+    }
   ]
 }
