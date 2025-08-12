@@ -3,8 +3,6 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Roboto } from 'next/font/google';
 
-import './globals.css';
-
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

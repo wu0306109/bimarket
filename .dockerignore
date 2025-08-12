@@ -25,3 +25,5 @@ pnpm-debug.log*
 
 # OS
 .DS_Store
+
+/src/stories
