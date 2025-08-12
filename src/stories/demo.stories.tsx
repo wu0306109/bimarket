@@ -1,19 +1,10 @@
 import { Demo, type DemoProps } from '@/ui/demo';
-import MuiThemeProvider from '@/ui/mui-theme-provider';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
   title: 'UI/Demo',
   component: Demo,
-  decorators: [
-    (Story) => (
-      <MuiThemeProvider>
-        <div style={{ padding: 16 }}>
-          <Story />
-        </div>
-      </MuiThemeProvider>
-    ),
-  ],
+  // Global MUI provider is set in .storybook/preview.tsx
   parameters: {
     layout: 'centered',
   },

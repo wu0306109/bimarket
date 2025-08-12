@@ -12,8 +12,25 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'coverage/**'],
+  },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   ...storybook.configs['flat/recommended'],
+  {
+    rules: {
+      // Enforce consistent import order; works with Prettier sort-imports plugin
+      'sort-imports': [
+        'error',
+        {
+          ignoreCase: false,
+          ignoreDeclarationSort: true,
+          ignoreMemberSort: false,
+          allowSeparatedGroups: true,
+        },
+      ],
+    },
+  },
 ];
 
 export default eslintConfig;
