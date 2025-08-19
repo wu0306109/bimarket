@@ -7,8 +7,8 @@ WORKDIR /app
 # 複製 package.json 和 package-lock.json
 COPY package*.json ./
 
-# 安裝依賴
-RUN npm ci --only=production && npm cache clean --force
+# 安裝依賴（包含 devDependencies，供建置時使用）
+RUN npm ci && npm cache clean --force
 
 # 複製應用程式代碼
 COPY . .

@@ -2,11 +2,9 @@ import fs from 'fs-extra';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { path: string[] } },
-) {
+export async function GET(request: NextRequest, context: any) {
   try {
+    const { params } = context as { params: { path: string[] } };
     const filePath = path.join(process.cwd(), 'uploads', ...params.path);
 
     // 檢查檔案是否存在

@@ -6,11 +6,9 @@ import { NextRequest, NextResponse } from 'next/server';
 const csvService = new CSVDataService();
 
 // GET /api/wish-products/[id] - 取得單一許願商品詳情
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function GET(request: NextRequest, context: any) {
   try {
+    const { params } = context as { params: { id: string } };
     const { id } = params;
 
     if (!id) {
@@ -53,7 +51,8 @@ export async function GET(
       data: product,
     });
   } catch (error) {
-    ErrorHandler.logError('GET_WISH_PRODUCT_BY_ID', error, { id: params.id });
+    const { params } = (context || {}) as { params?: { id: string } };
+    ErrorHandler.logError('GET_WISH_PRODUCT_BY_ID', error, { id: params?.id });
     const errorResponse = ErrorHandler.handleApiError(error);
     return NextResponse.json(errorResponse, { status: 500 });
   }

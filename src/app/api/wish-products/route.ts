@@ -1,6 +1,7 @@
 import { CSVDataService } from '@/services/csv-data.service';
 import { ErrorHandler } from '@/services/error-handler.service';
 import {
+  FileUpload,
   PaginatedResponse,
   PaginationQuery,
   WishProduct,
@@ -232,7 +233,7 @@ async function recordFileUploads(
   relatedId: string,
 ): Promise<void> {
   try {
-    const uploadRecords = await ErrorHandler.safeReadCSV(
+    const uploadRecords = await ErrorHandler.safeReadCSV<FileUpload>(
       csvService,
       'file-uploads.csv',
     );
@@ -251,7 +252,7 @@ async function recordFileUploads(
       });
     }
 
-    await ErrorHandler.safeWriteCSV(
+    await ErrorHandler.safeWriteCSV<FileUpload>(
       csvService,
       'file-uploads.csv',
       uploadRecords,
