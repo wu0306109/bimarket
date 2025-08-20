@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardActionArea,
+  CardMedia,
   Typography,
   Box,
   Chip,
@@ -12,6 +13,7 @@ import {
 import { WishProduct } from '@/lib/wish-products/types';
 import PersonIcon from '@mui/icons-material/Person';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import ImageIcon from '@mui/icons-material/Image';
 
 interface WishProductCardProps {
   product: WishProduct;
@@ -19,6 +21,21 @@ interface WishProductCardProps {
 }
 
 export function WishProductCard({ product, onClick }: WishProductCardProps) {
+  // 處理圖片 URL
+  const getImageUrl = (imageUrls: string | string[] | undefined) => {
+    if (!imageUrls) return null;
+    const urls = typeof imageUrls === 'string' ? imageUrls.split(',') : imageUrls;
+    const firstImage = urls[0]?.trim();
+    if (!firstImage || firstImage === '') return null;
+    // 如果是相對路徑，加上 uploads 前綴
+    if (!firstImage.startsWith('http') && !firstImage.startsWith('/')) {
+      return `/uploads/${firstImage}`;
+    }
+    return firstImage;
+  };
+
+  const imageUrl = getImageUrl(product.imageUrls || product.image_urls);
+
   return (
     <Card 
       sx={{ 
@@ -37,6 +54,35 @@ export function WishProductCard({ product, onClick }: WishProductCardProps) {
         onClick={() => onClick?.(product)}
         sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
       >
+      {/* 圖片區域 */}
+      {imageUrl ? (
+        <CardMedia
+          component="img"
+          height="200"
+          image={imageUrl}
+          alt={product.productName}
+          sx={{ 
+            objectFit: 'cover',
+            backgroundColor: 'grey.100'
+          }}
+          onError={(e) => {
+            // 如果圖片載入失敗，隱藏圖片
+            (e.target as HTMLImageElement).style.display = 'none';
+          }}
+        />
+      ) : (
+        <Box
+          sx={{
+            height: 200,
+            backgroundColor: 'grey.100',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <ImageIcon sx={{ fontSize: 60, color: 'grey.400' }} />
+        </Box>
+      )}
       <CardContent sx={{ flexGrow: 1 }}>
         {/* 商品名稱 */}
         <Typography variant="h6" component="h3" gutterBottom noWrap>
@@ -76,7 +122,7 @@ export function WishProductCard({ product, onClick }: WishProductCardProps) {
           color="primary" 
           sx={{ mb: 2, fontWeight: 'bold' }}
         >
-          NT$ {product.expectedPrice.toLocaleString()}
+          NT$ {product.expectedPrice?.toLocaleString() || '0'}
         </Typography>
 
         {/* 底部資訊 */}
@@ -95,7 +141,7 @@ export function WishProductCard({ product, onClick }: WishProductCardProps) {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <FavoriteIcon sx={{ fontSize: 18, color: 'error.main' }} />
             <Typography variant="body2" color="text.secondary">
-              {product.wishCount} 人許願
+              {product.wishCount || 0} 人許願
             </Typography>
           </Box>
         </Box>

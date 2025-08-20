@@ -27,7 +27,7 @@ export default function Home() {
 
       <Grid container spacing={4} justifyContent="center">
         {/* 許願商品申請 */}
-        <Grid item xs={12} sm={6} md={5}>
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
           <Card elevation={3} sx={{ height: '100%' }}>
             <CardContent sx={{ textAlign: 'center', p: 4 }}>
               <Favorite sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
@@ -52,7 +52,7 @@ export default function Home() {
         </Grid>
 
         {/* 許願商品清單 */}
-        <Grid item xs={12} sm={6} md={5}>
+        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
           <Card elevation={3} sx={{ height: '100%' }}>
             <CardContent sx={{ textAlign: 'center', p: 4 }}>
               <ViewList sx={{ fontSize: 60, color: 'secondary.main', mb: 2 }} />

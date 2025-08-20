@@ -114,7 +114,6 @@ export default function CategorySelect({
         value={value}
         label="商品類別"
         onChange={handleChange}
-        placeholder="請選擇商品類別"
       >
         <MenuItem value="" disabled>
           <em style={{ color: '#999' }}>請選擇商品類別</em>

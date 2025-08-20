@@ -12,6 +12,8 @@ import {
   Divider,
   Avatar,
   IconButton,
+  ImageList,
+  ImageListItem,
 } from '@mui/material';
 import { WishProduct } from '@/lib/wish-products/types';
 import CloseIcon from '@mui/icons-material/Close';
@@ -20,6 +22,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CategoryIcon from '@mui/icons-material/Category';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import ImageIcon from '@mui/icons-material/Image';
 
 interface ProductDetailDialogProps {
   open: boolean;
@@ -39,6 +42,23 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
       minute: '2-digit',
     });
   };
+
+  // 處理圖片 URLs
+  const getImageUrls = (imageUrls: string | string[] | undefined) => {
+    if (!imageUrls) return [];
+    const urls = typeof imageUrls === 'string' ? imageUrls.split(',') : imageUrls;
+    return urls
+      .filter(url => url && url.trim() !== '')
+      .map(url => {
+        const trimmedUrl = url.trim();
+        if (!trimmedUrl.startsWith('http') && !trimmedUrl.startsWith('/')) {
+          return `/uploads/${trimmedUrl}`;
+        }
+        return trimmedUrl;
+      });
+  };
+
+  const imageUrls = getImageUrls(product.imageUrls || product.image_urls);
 
   return (
     <Dialog 
@@ -66,6 +86,49 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
       </DialogTitle>
       
       <DialogContent dividers sx={{ p: 3 }}>
+        {/* 圖片區域 */}
+        {imageUrls.length > 0 && (
+          <Box sx={{ mb: 3 }}>
+            {imageUrls.length === 1 ? (
+              <Box
+                component="img"
+                src={imageUrls[0]}
+                alt={product.productName}
+                sx={{
+                  width: '100%',
+                  maxHeight: 400,
+                  objectFit: 'contain',
+                  borderRadius: 2,
+                  backgroundColor: 'grey.100',
+                }}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            ) : (
+              <ImageList cols={2} gap={8}>
+                {imageUrls.map((url, index) => (
+                  <ImageListItem key={index}>
+                    <img
+                      src={url}
+                      alt={`${product.productName} ${index + 1}`}
+                      loading="lazy"
+                      style={{
+                        borderRadius: 8,
+                        objectFit: 'cover',
+                        backgroundColor: '#f5f5f5',
+                      }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            )}
+          </Box>
+        )}
+
         {/* 商品名稱 */}
         <Typography variant="h5" gutterBottom fontWeight="bold">
           {product.productName}
@@ -82,7 +145,7 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
           />
           <Chip 
             icon={<FavoriteIcon />}
-            label={`${product.wishCount} 人許願`}
+            label={`${product.wishCount || 0} 人許願`}
             color="error" 
             variant="filled"
           />
@@ -109,7 +172,7 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
             </Typography>
           </Box>
           <Typography variant="h4" color="primary" fontWeight="bold">
-            NT$ {product.expectedPrice.toLocaleString()}
+            NT$ {product.expectedPrice?.toLocaleString() || '0'}
           </Typography>
         </Box>
 

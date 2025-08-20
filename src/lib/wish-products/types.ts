@@ -8,6 +8,8 @@ export interface WishProduct {
   expectedPrice: number;
   currency: string;
   wishCount: number;
+  imageUrls?: string | string[];
+  image_urls?: string | string[];  // 相容 CSV 欄位名稱
   createdAt: Date;
   updatedAt: Date;
 }

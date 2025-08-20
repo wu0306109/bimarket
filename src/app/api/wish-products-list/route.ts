@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getMockWishProducts } from '@/lib/wish-products/mockData';
 import { WishProductFilter, PaginationParams } from '@/lib/wish-products/types';
+import { CSVDataService } from '@/services/csv-data.service';
+import { ErrorHandler } from '@/services/error-handler.service';
+import { WishProduct } from '@/types/wish-product';
+
+const csvService = new CSVDataService();
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,40 +19,113 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('pageSize') || '20');
 
-    // 建立篩選條件
-    const filters: WishProductFilter = {
-      category,
-      minPrice: minPrice ? parseFloat(minPrice) : undefined,
-      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
-      sortBy: sortBy || 'createdAt',
-      sortOrder: sortOrder || 'desc',
-    };
+    // 從 CSV 讀取所有許願商品資料
+    let products = await ErrorHandler.safeReadCSV<WishProduct>(
+      csvService,
+      'wish-products.csv',
+    );
 
-    // 建立分頁參數
-    const pagination: PaginationParams = {
+    // 套用篩選條件
+    if (category) {
+      products = products.filter((p) => p.categoryId.toString() === category);
+    }
+
+    if (minPrice !== null) {
+      const min = parseFloat(minPrice);
+      products = products.filter((p) => {
+        const price = p.expectedPrice || 0;
+        return price >= min;
+      });
+    }
+
+    if (maxPrice !== null) {
+      const max = parseFloat(maxPrice);
+      products = products.filter((p) => {
+        const price = p.expectedPrice || 0;
+        return price <= max;
+      });
+    }
+
+    // 排序
+    products.sort((a, b) => {
+      let aValue: any, bValue: any;
+
+      switch (sortBy) {
+        case 'wishCount':
+          aValue = a.wishCount || 0;
+          bValue = b.wishCount || 0;
+          break;
+        case 'expectedPrice':
+          aValue = a.expectedPrice || 0;
+          bValue = b.expectedPrice || 0;
+          break;
+        case 'createdAt':
+        default:
+          aValue = new Date(a.createdAt).getTime();
+          bValue = new Date(b.createdAt).getTime();
+      }
+
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+
+    // 分頁
+    const total = products.length;
+    const totalPages = Math.ceil(total / pageSize);
+    const offset = (page - 1) * pageSize;
+    const paginatedProducts = products.slice(offset, offset + pageSize);
+
+    // 轉換為前端期望的格式
+    const result = {
+      data: paginatedProducts.map(product => ({
+        id: product.id,
+        name: product.name,
+        productName: product.name,  // 相容性
+        description: product.description,
+        category: getCategoryName(product.categoryId),
+        region: product.region,
+        status: product.status,
+        expectedPrice: product.expectedPrice || 0,
+        currency: product.currency || 'TWD',
+        wishCount: product.wishCount || 0,
+        imageUrl: product.imageUrls?.[0] || null,
+        imageUrls: product.imageUrls || product.image_urls || [],
+        image_urls: product.image_urls || product.imageUrls || [],
+        createdAt: new Date(product.createdAt).toISOString(),
+        updatedAt: new Date(product.updatedAt).toISOString(),
+      })),
+      total,
       page,
       pageSize,
+      totalPages,
     };
 
-    // 取得模擬資料
-    const result = getMockWishProducts(filters, pagination);
-    
-    // 將 Date 物件轉換為 ISO 字串
-    const serializedResult = {
-      ...result,
-      data: result.data.map(product => ({
-        ...product,
-        createdAt: product.createdAt.toISOString(),
-        updatedAt: product.updatedAt.toISOString(),
-      })),
-    };
-
-    return NextResponse.json(serializedResult, { status: 200 });
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error('Error fetching wish products:', error);
+    ErrorHandler.logError('GET_WISH_PRODUCTS_LIST', error);
     return NextResponse.json(
       { error: 'Failed to fetch wish products' },
       { status: 500 }
     );
   }
+}
+
+// 輔助函數：取得類別名稱
+function getCategoryName(categoryId: number): string {
+  const categories: Record<number, string> = {
+    1: '電子產品',
+    2: '服飾配件',
+    3: '美妝保養',
+    4: '食品飲料',
+    5: '家居生活',
+    6: '運動健身',
+    7: '圖書文具',
+    8: '玩具遊戲',
+    9: '其他',
+  };
+  return categories[categoryId] || '其他';
 }

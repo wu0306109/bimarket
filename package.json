@@ -13,7 +13,8 @@
     "build-storybook": "storybook build",
     "test": "vitest --run",
     "test:ui": "vitest --ui --open false",
-    "init-csv": "node scripts/init-csv-data.js"
+    "init-csv": "node scripts/init-csv-data.js",
+    "seed-products": "node scripts/seed-wish-products.js"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -30,6 +31,7 @@
     "fs-extra": "^11.3.1",
     "multer": "^2.0.2",
     "next": "15.4.6",
+    "papaparse": "^5.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.62.0",

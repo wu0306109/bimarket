@@ -47,7 +47,7 @@ export function WishProductList({ filters, pagination, onProductClick }: WishPro
     return (
       <Grid container spacing={3}>
         {[...Array(8)].map((_, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
             <ProductCardSkeleton />
           </Grid>
         ))}
@@ -101,7 +101,7 @@ export function WishProductList({ filters, pagination, onProductClick }: WishPro
       
       <Grid container spacing={3}>
         {data.data.map((product) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={product.id}>
             <WishProductCard product={product} onClick={onProductClick} />
           </Grid>
         ))}

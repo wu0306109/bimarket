@@ -40,7 +40,6 @@ export class CSVDataService {
         stream
           .pipe(
             csvParser({
-              skipEmptyLines: true,
               mapHeaders: ({ header }) => header.trim(),
             }),
           )
@@ -93,8 +92,8 @@ export class CSVDataService {
       const csvContent = csvStringify(transformedData, {
         header: true,
         quoted: true,
-        quotedEmpty: true,
-        quotedString: true,
+        quoted_empty: true,
+        quoted_string: true,
       });
 
       await fs.writeFile(filePath, csvContent, 'utf-8');
@@ -116,7 +115,7 @@ export class CSVDataService {
       }
 
       // 處理數字 (但保持 id 為字串)
-      ['category_id', 'sort_order', 'file_size'].forEach((field) => {
+      ['category_id', 'sort_order', 'file_size', 'expectedPrice', 'wishCount'].forEach((field) => {
         if (transformed[field] !== undefined && transformed[field] !== '') {
           const num = parseInt(transformed[field]);
           if (!isNaN(num)) {

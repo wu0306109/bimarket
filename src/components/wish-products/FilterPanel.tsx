@@ -83,7 +83,7 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
 
       <Grid container spacing={2}>
         {/* 類別篩選 */}
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <TextField
             select
             fullWidth
@@ -103,7 +103,7 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
         </Grid>
 
         {/* 最低價格 */}
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <TextField
             fullWidth
             type="number"
@@ -118,7 +118,7 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
         </Grid>
 
         {/* 最高價格 */}
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <TextField
             fullWidth
             type="number"
@@ -133,7 +133,7 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
         </Grid>
 
         {/* 排序方式 */}
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <TextField
             select
             fullWidth
@@ -149,7 +149,7 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
         </Grid>
 
         {/* 排序順序 */}
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <TextField
             select
             fullWidth
@@ -164,14 +164,20 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
         </Grid>
 
         {/* 清除篩選按鈕 */}
-        <Grid item xs={12} sm={6} md={1}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <Button
             fullWidth
             variant="outlined"
             onClick={handleClearFilters}
             startIcon={<ClearIcon />}
             size="medium"
-            sx={{ height: '40px' }}
+            sx={{ 
+              height: '40px',
+              fontSize: { xs: '0.875rem', md: '0.75rem' },
+              '.MuiButton-startIcon': {
+                marginRight: { xs: 1, md: 0.5 }
+              }
+            }}
           >
             清除
           </Button>

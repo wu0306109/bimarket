@@ -7,8 +7,12 @@ export interface WishProduct {
   description: string;
   categoryId: number;
   region: string;
+  expectedPrice?: number;
+  currency?: string;
+  wishCount?: number;
   additionalInfo?: string;
   imageUrls: string[];
+  image_urls?: string;  // 相容 CSV 欄位
   status: 'pending' | 'processing' | 'completed' | 'cancelled';
   userId?: string;
   createdAt: Date;
@@ -45,6 +49,7 @@ export interface WishProductForm {
   description: string;
   categoryId: number;
   region: string;
+  expectedPrice: number;
   additionalInfo?: string;
   images?: File[];
 }
@@ -70,6 +75,11 @@ export const wishProductSchema = z.object({
     .min(1, '請填寫商品所在領域')
     .max(100, '商品所在領域不可超過100個字元')
     .trim(),
+
+  expectedPrice: z
+    .number()
+    .positive('期望價格必須大於0')
+    .max(9999999, '期望價格不可超過9,999,999'),
 
   additionalInfo: z.string().max(1000, '補充資訊不可超過1000個字元').optional(),
 
