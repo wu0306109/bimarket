@@ -21,7 +21,7 @@ async function updatePricesAndWishCounts() {
 
     // 檢查標題行
     const header = lines[0];
-    if (!header.includes('expectedPrice') || !header.includes('wishCount')) {
+    if (!header.includes('expected_price') || !header.includes('wish_count')) {
       console.log('❌ CSV 檔案缺少必要欄位');
       return;
     }
@@ -69,14 +69,14 @@ async function updatePricesAndWishCounts() {
           wishCount: 1,
         };
 
-        // 更新 expectedPrice 欄位（第七個欄位）
-        const priceIndex = 6; // 0-based index for expectedPrice
+        // 更新 expected_price 欄位（第六個欄位）
+        const priceIndex = 5; // 0-based index for expected_price
         if (parts[priceIndex]) {
           parts[priceIndex] = productInfo.price.toString();
         }
 
-        // 更新 wishCount 欄位（第八個欄位）
-        const wishCountIndex = 7; // 0-based index for wishCount
+        // 更新 wish_count 欄位（第七個欄位）
+        const wishCountIndex = 6; // 0-based index for wish_count
         if (parts[wishCountIndex]) {
           parts[wishCountIndex] = productInfo.wishCount.toString();
         }

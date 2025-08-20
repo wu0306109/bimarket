@@ -8,9 +8,9 @@ const testProduct = {
   description: '這是一個測試商品，用於驗證新增功能',
   categoryId: 1,
   region: '台灣',
-  expectedPrice: 1000,
+  expected_price: 1000,
   currency: 'TWD',
-  wishCount: 0,
+  wish_count: 0,
   additionalInfo: '測試用的補充資訊',
   imageUrls: [],
   image_urls: '',
@@ -30,7 +30,7 @@ async function testAddProductToCSV() {
     if (!(await fs.pathExists(csvPath))) {
       console.log('❌ CSV 檔案不存在，創建新檔案...');
       const headers =
-        'id,name,description,region,status,expectedPrice,currency,wishCount,image_urls,created_at,updated_at,category_id,additional_info,user_id\n';
+        'id,name,description,region,status,expected_price,currency,wish_count,image_urls,created_at,updated_at,category_id,additional_info,user_id\n';
       await fs.writeFile(csvPath, headers, 'utf-8');
     }
 
@@ -48,9 +48,9 @@ async function testAddProductToCSV() {
       testProduct.description,
       testProduct.region,
       testProduct.status,
-      testProduct.expectedPrice,
+      testProduct.expected_price,
       testProduct.currency,
-      testProduct.wishCount,
+      testProduct.wish_count,
       testProduct.image_urls,
       testProduct.createdAt,
       testProduct.updatedAt,

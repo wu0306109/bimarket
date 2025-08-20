@@ -119,8 +119,8 @@ export class CSVDataService {
         'category_id',
         'sort_order',
         'file_size',
-        'expectedPrice',
-        'wishCount',
+        'expected_price',
+        'wish_count',
       ].forEach((field) => {
         if (transformed[field] !== undefined && transformed[field] !== '') {
           const num = parseInt(transformed[field]);
@@ -168,8 +168,8 @@ export class CSVDataService {
         mime_type: 'mimeType',
         related_table: 'relatedTable',
         related_id: 'relatedId',
-        wishCount: 'wishCount',
-        expectedPrice: 'expectedPrice',
+        wish_count: 'wishCount',
+        expected_price: 'expectedPrice',
       };
 
       Object.keys(snakeToCamelMap).forEach((snakeKey) => {
@@ -227,8 +227,8 @@ export class CSVDataService {
       mimeType: 'mime_type',
       relatedTable: 'related_table',
       relatedId: 'related_id',
-      wishCount: 'wishCount',
-      expectedPrice: 'expectedPrice',
+      wishCount: 'wish_count',
+      expectedPrice: 'expected_price',
     };
 
     Object.keys(camelToSnakeMap).forEach((camelKey) => {

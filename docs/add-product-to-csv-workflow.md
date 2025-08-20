@@ -34,17 +34,17 @@
 新商品會以以下格式寫入 CSV：
 
 ```csv
-id,name,description,region,status,expectedPrice,currency,wishCount,image_urls,created_at,updated_at,category_id,additional_info,user_id
+id,name,description,region,status,expected_price,currency,wish_count,image_urls,created_at,updated_at,category_id,additional_info,user_id
 ```
 
 ### 5. 資料轉換
 
 API 會自動處理以下資料轉換：
 
-- `camelCase` 轉 `snake_case`（如 `categoryId` → `category_id`）
+- `camelCase` 轉 `snake_case`（如 `categoryId` → `category_id`, `expectedPrice` → `expected_price`, `wishCount` → `wish_count`）
 - 日期格式轉換為 ISO 字串
 - 圖片 URL 陣列轉換為逗號分隔字串
-- 設定預設值（如 `currency: 'TWD'`, `wishCount: 0`）
+- 設定預設值（如 `currency: 'TWD'`, `wish_count: 1`）
 
 ### 6. 安全機制
 
@@ -55,10 +55,10 @@ API 會自動處理以下資料轉換：
 
 ## 修復的問題
 
-### 1. 缺少 expectedPrice 欄位解析
+### 1. 缺少 expected_price 欄位解析
 
-- **問題**：API 中沒有解析 `expectedPrice` 欄位
-- **修復**：在表單資料解析中添加 `expectedPrice: parseFloat(formData.get('expectedPrice') as string)`
+- **問題**：API 中沒有解析 `expectedPrice` 欄位，且CSV欄位映射錯誤
+- **修復**：在表單資料解析中添加 `expectedPrice: parseFloat(formData.get('expectedPrice') as string)`，並修正CSV服務中的欄位映射為 `expectedPrice` → `expected_price`
 
 ### 2. 資料結構完整性
 
