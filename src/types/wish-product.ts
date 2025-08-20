@@ -17,6 +17,7 @@ export interface WishProduct {
   userId?: string;
   createdAt: Date;
   updatedAt: Date;
+  likeCount?: number; // Added for wish-product likes
 }
 
 // 商品類別介面

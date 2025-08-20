@@ -115,7 +115,13 @@ export class CSVDataService {
       }
 
       // 處理數字 (但保持 id 為字串)
-      ['category_id', 'sort_order', 'file_size', 'expectedPrice', 'wishCount'].forEach((field) => {
+      [
+        'category_id',
+        'sort_order',
+        'file_size',
+        'expectedPrice',
+        'wishCount',
+      ].forEach((field) => {
         if (transformed[field] !== undefined && transformed[field] !== '') {
           const num = parseInt(transformed[field]);
           if (!isNaN(num)) {
@@ -162,6 +168,7 @@ export class CSVDataService {
         mime_type: 'mimeType',
         related_table: 'relatedTable',
         related_id: 'relatedId',
+        wishCount: 'wishCount',
       };
 
       Object.keys(snakeToCamelMap).forEach((snakeKey) => {
@@ -219,6 +226,7 @@ export class CSVDataService {
       mimeType: 'mime_type',
       relatedTable: 'related_table',
       relatedId: 'related_id',
+      wishCount: 'wishCount',
     };
 
     Object.keys(camelToSnakeMap).forEach((camelKey) => {
@@ -298,5 +306,31 @@ export class CSVDataService {
 
     // 寫入新資料
     await this.writeCSV(filename, data);
+  }
+
+  // 增加許願商品的點讚數
+  async incrementWishProductLikeCount(productId: string): Promise<boolean> {
+    try {
+      const products = await this.readCSV<any>('wish-products.csv');
+      const productIndex = products.findIndex((p) => p.id === productId);
+
+      if (productIndex === -1) {
+        console.warn(`未找到 ID 為 ${productId} 的許願商品。`);
+        return false;
+      }
+
+      // 確保 likeCount 存在且為數字
+      const currentLikes = products[productIndex].likeCount || 0;
+      products[productIndex].likeCount = currentLikes + 1;
+
+      await this.secureWriteCSV('wish-products.csv', products);
+      console.log(
+        `許願商品 ${productId} 的點讚數已增加到 ${products[productIndex].likeCount}`,
+      );
+      return true;
+    } catch (error) {
+      console.error(`增加許願商品點讚數失敗 (${productId}):`, error);
+      throw new Error(`UPDATE_wishCount_ERROR: ${productId}`);
+    }
   }
 }
