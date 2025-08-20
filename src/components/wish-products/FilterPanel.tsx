@@ -1,27 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { getCategories } from '@/lib/wish-products/mockData';
+import { WishProductFilter } from '@/lib/wish-products/types';
+import ClearIcon from '@mui/icons-material/Clear';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
-  Paper,
-  TextField,
-  MenuItem,
   Button,
-  Typography,
   Grid,
   InputAdornment,
+  MenuItem,
+  Paper,
+  TextField,
+  Typography,
 } from '@mui/material';
-import { WishProductFilter } from '@/lib/wish-products/types';
-import { getCategories } from '@/lib/wish-products/mockData';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import ClearIcon from '@mui/icons-material/Clear';
+import { useEffect, useState } from 'react';
 
 interface FilterPanelProps {
   onFilterChange: (filters: WishProductFilter) => void;
-  totalCount?: number;
 }
 
-export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
+export function FilterPanel({ onFilterChange }: FilterPanelProps) {
   const [categories] = useState(getCategories());
   const [filters, setFilters] = useState<WishProductFilter>({
     sortBy: 'createdAt',
@@ -34,7 +33,7 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
   }, [filters, onFilterChange]);
 
   const handleCategoryChange = (category: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       category: category || undefined,
     }));
@@ -42,21 +41,21 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
 
   const handlePriceChange = (field: 'minPrice' | 'maxPrice', value: string) => {
     const numValue = value ? parseFloat(value) : undefined;
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       [field]: numValue,
     }));
   };
 
   const handleSortChange = (sortBy: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       sortBy: sortBy as WishProductFilter['sortBy'],
     }));
   };
 
   const handleOrderChange = (sortOrder: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       sortOrder: sortOrder as WishProductFilter['sortOrder'],
     }));
@@ -74,11 +73,6 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
         <FilterListIcon sx={{ mr: 1, color: 'primary.main' }} />
         <Typography variant="h6">篩選條件</Typography>
-        {totalCount !== undefined && (
-          <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
-            共 {totalCount} 項商品
-          </Typography>
-        )}
       </Box>
 
       <Grid container spacing={2}>
@@ -112,7 +106,9 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
             onChange={(e) => handlePriceChange('minPrice', e.target.value)}
             size="small"
             InputProps={{
-              startAdornment: <InputAdornment position="start">NT$</InputAdornment>,
+              startAdornment: (
+                <InputAdornment position="start">NT$</InputAdornment>
+              ),
             }}
           />
         </Grid>
@@ -127,7 +123,9 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
             onChange={(e) => handlePriceChange('maxPrice', e.target.value)}
             size="small"
             InputProps={{
-              startAdornment: <InputAdornment position="start">NT$</InputAdornment>,
+              startAdornment: (
+                <InputAdornment position="start">NT$</InputAdornment>
+              ),
             }}
           />
         </Grid>
@@ -171,12 +169,12 @@ export function FilterPanel({ onFilterChange, totalCount }: FilterPanelProps) {
             onClick={handleClearFilters}
             startIcon={<ClearIcon />}
             size="medium"
-            sx={{ 
+            sx={{
               height: '40px',
               fontSize: { xs: '0.875rem', md: '0.75rem' },
               '.MuiButton-startIcon': {
-                marginRight: { xs: 1, md: 0.5 }
-              }
+                marginRight: { xs: 1, md: 0.5 },
+              },
             }}
           >
             清除
