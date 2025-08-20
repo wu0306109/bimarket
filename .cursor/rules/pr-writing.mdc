@@ -1,0 +1,157 @@
+---
+alwaysApply: false
+---
+## Purpose
+
+- Ensure PR descriptions are quick to read, outcome-first, and consistent.
+- Keep content minimal yet precise; avoid unnecessary implementation details.
+- Improve review quality by clarifying intent, scope, and risks upfront.
+
+## Principles
+
+- Focus on what changed and why it matters; avoid code-level details unless essential.
+- Be specific, testable, and scannable. Prefer short sentences. Use single-level numbered lists (1., 2., 3.).
+- Link related issues and surface risks, breaking changes, and rollout considerations.
+- Language policy: title in American English; all section content in Traditional Chinese (Taiwan).
+- Do not expose secrets or sensitive data. Redact tokens, keys, and PII.
+
+## Structure
+
+Every PR description must follow this order and heading depth:
+
+```markdown
+# <PR title in American English>
+
+## What
+
+1. ...
+2. ...
+
+## Tickets
+
+1. ...
+2. ...
+
+## Usage (optional)
+
+...
+
+## Notes
+
+1. ...
+2. ...
+```
+
+## Formatting
+
+- First line: `#` PR title in American English.
+- Sections: `## What`, `## Tickets`, `## Usage` (optional), `## Notes`.
+- Section content language: Traditional Chinese (Taiwan).
+- Lists: use single-level numbered lists only (1., 2., 3.); avoid nested lists and avoid hyphen bullets.
+- Do not introduce additional section levels beyond the defined `##` headings.
+- Code blocks are allowed for minimal, correct examples (e.g., API request/response).
+
+### What
+
+- Sentences from a general/product perspective.
+- Describe the outcome and impact, not the implementation.
+- Call out scope boundaries and any breaking or notable UX/API change.
+
+### Tickets
+
+- List all relevant issues. Use closing keywords when appropriate.
+- Recommended numbered entries in the section:
+  1. Closes #1234: <issue title>
+  2. Relates to #5678: <issue title>
+
+### Usage (optional)
+
+Include only when users/devs need to change how they operate or integrate.
+
+- Briefly show how to use the new/changed flow or API.
+- Cover inputs/outputs, flags, permissions, migrations, or config toggles if relevant.
+- Keep examples minimal and correct.
+
+Example (single-level numbered list within section):
+
+1. Endpoint: POST /api/v1/widgets
+2. Body:
+
+```json
+{
+  "name": "string",
+  "type": "standard" | "pro"
+}
+```
+
+3. Response:
+
+```json
+{
+  "id": "w_123",
+  "name": "..."
+}
+```
+
+4. 注意事項：需要 `WIDGETS_WRITE` 權限；功能旗標 `widgets_v2`（預設關閉）。
+
+### Notes
+
+- Surface important implementation considerations and risks without code dumps.
+- Suggested bullets:
+  - Breaking changes and backward compatibility.
+  - Performance, security, and privacy implications.
+  - Rollout/rollback plan, migrations/backfills, data impacts.
+  - Monitoring/alerting updates and observability tags.
+  - Known issues, trade-offs, and follow-up tasks.
+  - Limitations and non-goals for this PR.
+
+## Style & Tone
+
+- Keep it concise; prefer numbered lists over paragraphs.
+- Use plain language; avoid library/internal jargon unless necessary for usage.
+- Use consistent headings: What, Tickets, Usage, Notes.
+- Attach small, relevant screenshots for UI; avoid large or redundant media.
+
+## Template
+
+Copy and paste for each PR:
+
+```markdown
+# <PR title in American English>
+
+## What
+
+1. 以一般視角描述變更內容與影響（1–3 句）。
+2. 說明範圍邊界。
+3. 註明是否有破壞相容性的改變或顯著的 UX/API 變動。
+
+## Tickets
+
+1. Closes #<id>: <issue title>
+2. Relates to #<id>: <issue title>
+
+## Usage (optional)
+
+1. 僅在使用流程/API/整合有變更時提供。
+2. 最小可用範例（例如 Endpoint、Body、Response）。
+3. 必要的權限、旗標、遷移或設定調整。
+
+## Notes
+
+1. 風險與影響（含破壞相容性）。
+2. 效能、安全性與隱私考量。
+3. Rollout/Rollback 與遷移/回填計畫。
+4. 監控/警示更新與可觀測性標籤。
+5. 已知問題、取捨與後續工作。
+```
+
+## Review Checklist (for acceptance)
+
+- What is concise, non-technical, and clearly states outcome/impact.
+- All related issues are listed; closing keywords used where applicable.
+- Usage exists when flows/APIs/configs change; examples are minimal and correct.
+- Notes call out risks, breaking changes, rollout/rollback, and known issues.
+- No secrets or sensitive data are revealed.
+- Screenshots/GIFs included for UI-impacting changes.
+- Documentation/Storybook/tests updated if the surface changes.

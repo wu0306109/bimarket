@@ -1,0 +1,65 @@
+---
+alwaysApply: false
+---
+## Purpose
+
+- Define a consistent, lightweight way to write AC that is clear, testable, and outcome-focused from the Product Owner (PO) perspective.
+- Keep AC "just enough" for effective planning and acceptance, without prescribing technical solutions.
+
+## Principles
+
+- Focus on user-observable behavior and value, not implementation.
+- Keep it minimal: include only what is necessary to accept/reject the work.
+- Be specific and testable; avoid ambiguous wording.
+- Prefer bullet points over long prose.
+- Maintain backward compatibility when relevant (legacy flows should still work).
+- Accessibility and responsiveness are part of acceptance when UI is involved.
+- Keep language concise; use Traditional Chinese (Taiwan) or English consistently.
+
+## Structure
+
+- Epic: short goal and success definition.
+- Story/Ticket: one outcome per ticket.
+- Acceptance Criteria (AC): bullet points; each item is verifiable.
+- Optional Notes: brief feasibility or constraints that help scope (no technical detail).
+
+## Do / Don’t
+
+- Do: describe what the user can do/see; define edge cases that matter.
+- Do: specify ordering, visibility, empty states, and error states when relevant.
+- Do: include accessibility basics (e.g., alternative text) and RWD stability when UI.
+- Don’t: name APIs, DTO fields, database schemas, or libraries.
+- Don’t: over-constrain design or implementation.
+
+## Templates
+
+### Epic
+
+- Goal: <one sentence business outcome>
+- Definition of Done:
+  - <cross-cutting acceptance, e.g., works on mobile/desktop, accessibility basics>
+  - <legacy content still works>
+
+### Story/Ticket
+
+- Title: <concise outcome>
+- Acceptance Criteria
+  - <criterion 1>
+  - <criterion 2>
+  - <criterion 3>
+- Optional Notes (non-technical)
+  - <constraints/assumptions impacting scope>
+
+## Examples (generic)
+
+- UI list supports 0..N items; empty state is informative and non-blocking.
+- Order in UI matches source order; no unexpected gaps or overlaps.
+- Items with media show alternative text; failed loads do not block core tasks.
+- Layout remains stable on common phone and desktop widths.
+
+## Review Checklist (for acceptance)
+
+- Criteria are observable and testable without reading code.
+- No implementation details are required to understand acceptance.
+- Edge cases and empty states are covered when relevant.
+- Language is concise and consistent.
