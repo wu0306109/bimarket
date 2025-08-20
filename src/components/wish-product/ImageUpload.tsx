@@ -24,7 +24,7 @@ interface ImageUploadProps {
 
 export default function ImageUpload({
   onChange,
-  maxFiles = 5,
+  maxFiles = 1, // 改為只能上傳 1 張圖片
   maxFileSize = 5 * 1024 * 1024, // 5MB
   acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'],
 }: ImageUploadProps) {
@@ -51,10 +51,9 @@ export default function ImageUpload({
 
       const fileArray = Array.from(files);
 
-      // 檢查檔案數量限制
-      if (uploadedImages.length + fileArray.length > maxFiles) {
-        setError(`最多只能上傳 ${maxFiles} 張圖片`);
-        return;
+      // 如果已經有圖片，先清除舊的
+      if (uploadedImages.length > 0) {
+        uploadedImages.forEach((img) => removeImage(img.id));
       }
 
       const validFiles: File[] = [];
@@ -76,15 +75,12 @@ export default function ImageUpload({
         }
 
         // 更新父元件
-        const allFiles = uploadedImages
-          .map((img) => img.file)
-          .concat(validFiles);
-        onChange(allFiles);
+        onChange(validFiles);
       } catch (error) {
         setError(error instanceof Error ? error.message : '上傳失敗');
       }
     },
-    [uploadedImages, uploadImage, onChange, maxFiles],
+    [uploadedImages, uploadImage, onChange, removeImage],
   );
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,27 +173,14 @@ export default function ImageUpload({
               拖曳圖片到此處或點擊上傳
             </Typography>
             <Typography variant="body2" color="text.secondary" gutterBottom>
-              支援 JPG, PNG, WebP 格式，單檔最大 5MB
+              支援 JPG, PNG, WebP 格式，單檔最大 5MB，只能上傳 1 張圖片
             </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 2,
-                mb: 3,
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                已上傳: {uploadedImages.length}/{maxFiles}
-              </Typography>
-            </Box>
 
             <Button
               variant="contained"
               component="label"
               startIcon={<ImageIcon />}
-              disabled={uploadedImages.length >= maxFiles}
+              disabled={uploadingImages}
               sx={{
                 borderRadius: 2,
                 px: 3,
@@ -209,11 +192,10 @@ export default function ImageUpload({
                 },
               }}
             >
-              選擇圖片
+              {uploadedImages.length === 0 ? '選擇圖片' : '更換圖片'}
               <input
                 type="file"
                 hidden
-                multiple
                 accept={acceptedTypes.join(',')}
                 onChange={handleFileSelect}
               />
@@ -234,18 +216,14 @@ export default function ImageUpload({
               mb: 2,
             }}
           >
-            已上傳的圖片 ({uploadedImages.length})
+            已上傳的圖片
           </Typography>
 
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: 'repeat(2, 1fr)',
-                sm: 'repeat(3, 1fr)',
-                md: 'repeat(4, 1fr)',
-              },
-              gap: 2,
+              display: 'flex',
+              justifyContent: 'center',
+              maxWidth: 300,
             }}
           >
             {uploadedImages.map((image) => (

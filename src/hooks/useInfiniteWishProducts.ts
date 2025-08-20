@@ -14,7 +14,7 @@ interface InfiniteWishProductsState {
 
 export function useInfiniteWishProducts(
   filters?: WishProductFilter,
-  pageSize: number = 20,
+  pageSize: number = 12,
 ) {
   const [state, setState] = useState<InfiniteWishProductsState>({
     products: [],

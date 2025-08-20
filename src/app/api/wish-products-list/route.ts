@@ -1,23 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { WishProductFilter, PaginationParams } from '@/lib/wish-products/types';
+import { PaginationParams, WishProductFilter } from '@/lib/wish-products/types';
 import { CSVDataService } from '@/services/csv-data.service';
 import { ErrorHandler } from '@/services/error-handler.service';
 import { WishProduct } from '@/types/wish-product';
+import { NextRequest, NextResponse } from 'next/server';
 
 const csvService = new CSVDataService();
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    
+
     // 解析查詢參數
     const category = searchParams.get('category') || undefined;
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
     const sortBy = searchParams.get('sortBy') as WishProductFilter['sortBy'];
-    const sortOrder = searchParams.get('sortOrder') as WishProductFilter['sortOrder'];
+    const sortOrder = searchParams.get(
+      'sortOrder',
+    ) as WishProductFilter['sortOrder'];
     const page = parseInt(searchParams.get('page') || '1');
-    const pageSize = parseInt(searchParams.get('pageSize') || '20');
+    const pageSize = parseInt(searchParams.get('pageSize') || '12');
 
     // 從 CSV 讀取所有許願商品資料
     let products = await ErrorHandler.safeReadCSV<WishProduct>(
@@ -80,10 +82,10 @@ export async function GET(request: NextRequest) {
 
     // 轉換為前端期望的格式
     const result = {
-      data: paginatedProducts.map(product => ({
+      data: paginatedProducts.map((product) => ({
         id: product.id,
         name: product.name,
-        productName: product.name,  // 相容性
+        productName: product.name, // 相容性
         description: product.description,
         category: getCategoryName(product.categoryId),
         region: product.region,
@@ -91,9 +93,14 @@ export async function GET(request: NextRequest) {
         expectedPrice: product.expectedPrice || 0,
         currency: product.currency || 'TWD',
         wishCount: product.wishCount || 0,
-        imageUrl: product.imageUrls?.[0] || product.image_urls?.split(',')[0] || null,
-        imageUrls: product.imageUrls || (product.image_urls ? product.image_urls.split(',') : []),
-        image_urls: product.image_urls || (product.imageUrls ? product.imageUrls.join(',') : ''),
+        imageUrl:
+          product.imageUrls?.[0] || product.image_urls?.split(',')[0] || null,
+        imageUrls:
+          product.imageUrls ||
+          (product.image_urls ? product.image_urls.split(',') : []),
+        image_urls:
+          product.image_urls ||
+          (product.imageUrls ? product.imageUrls.join(',') : ''),
         createdAt: new Date(product.createdAt).toISOString(),
         updatedAt: new Date(product.updatedAt).toISOString(),
       })),
@@ -109,7 +116,7 @@ export async function GET(request: NextRequest) {
     ErrorHandler.logError('GET_WISH_PRODUCTS_LIST', error);
     return NextResponse.json(
       { error: 'Failed to fetch wish products' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

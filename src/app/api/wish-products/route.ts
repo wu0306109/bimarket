@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       description: formData.get('description'),
       categoryId: parseInt(formData.get('categoryId') as string),
       region: formData.get('region'),
+      expectedPrice: parseFloat(formData.get('expectedPrice') as string),
       additionalInfo: formData.get('additionalInfo') || undefined,
     };
 
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
       region: validatedData.region,
       expectedPrice: validatedData.expectedPrice,
       currency: 'TWD',
-      wishCount: 0,
+      wishCount: 1, // 新商品最低許願人數為1（發布者自己）
       additionalInfo: validatedData.additionalInfo || '',
       imageUrls: imageUrls,
       image_urls: imageUrls.join(','), // 相容 CSV 格式

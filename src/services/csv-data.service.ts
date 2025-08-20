@@ -169,6 +169,7 @@ export class CSVDataService {
         related_table: 'relatedTable',
         related_id: 'relatedId',
         wishCount: 'wishCount',
+        expectedPrice: 'expectedPrice',
       };
 
       Object.keys(snakeToCamelMap).forEach((snakeKey) => {
@@ -227,6 +228,7 @@ export class CSVDataService {
       relatedTable: 'related_table',
       relatedId: 'related_id',
       wishCount: 'wishCount',
+      expectedPrice: 'expectedPrice',
     };
 
     Object.keys(camelToSnakeMap).forEach((camelKey) => {

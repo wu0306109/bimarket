@@ -1,4 +1,9 @@
-import { WishProduct, WishProductFilter, PaginationParams, WishProductsResponse } from './types';
+import {
+  PaginationParams,
+  WishProduct,
+  WishProductFilter,
+  WishProductsResponse,
+} from './types';
 
 const mockProducts: WishProduct[] = [
   {
@@ -161,29 +166,35 @@ const mockProducts: WishProduct[] = [
 
 export function getMockWishProducts(
   filters?: WishProductFilter,
-  pagination?: PaginationParams
+  pagination?: PaginationParams,
 ): WishProductsResponse {
   let filteredProducts = [...mockProducts];
 
   // 套用篩選條件
   if (filters) {
     if (filters.category) {
-      filteredProducts = filteredProducts.filter(p => p.category === filters.category);
+      filteredProducts = filteredProducts.filter(
+        (p) => p.category === filters.category,
+      );
     }
     if (filters.minPrice !== undefined) {
-      filteredProducts = filteredProducts.filter(p => p.expectedPrice >= filters.minPrice!);
+      filteredProducts = filteredProducts.filter(
+        (p) => p.expectedPrice >= filters.minPrice!,
+      );
     }
     if (filters.maxPrice !== undefined) {
-      filteredProducts = filteredProducts.filter(p => p.expectedPrice <= filters.maxPrice!);
+      filteredProducts = filteredProducts.filter(
+        (p) => p.expectedPrice <= filters.maxPrice!,
+      );
     }
 
     // 排序
     const sortBy = filters.sortBy || 'createdAt';
     const sortOrder = filters.sortOrder || 'desc';
-    
+
     filteredProducts.sort((a, b) => {
       let compareValue = 0;
-      
+
       switch (sortBy) {
         case 'createdAt':
           compareValue = a.createdAt.getTime() - b.createdAt.getTime();
@@ -195,17 +206,17 @@ export function getMockWishProducts(
           compareValue = a.expectedPrice - b.expectedPrice;
           break;
       }
-      
+
       return sortOrder === 'asc' ? compareValue : -compareValue;
     });
   }
 
   // 分頁處理
   const page = pagination?.page || 1;
-  const pageSize = pagination?.pageSize || 20;
+  const pageSize = pagination?.pageSize || 12;
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  
+
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
   const totalPages = Math.ceil(filteredProducts.length / pageSize);
 
@@ -220,6 +231,6 @@ export function getMockWishProducts(
 
 // 取得所有類別
 export function getCategories(): string[] {
-  const categories = new Set(mockProducts.map(p => p.category));
+  const categories = new Set(mockProducts.map((p) => p.category));
   return Array.from(categories).sort();
 }

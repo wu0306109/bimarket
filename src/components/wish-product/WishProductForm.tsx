@@ -20,9 +20,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
 
 import CategorySelect from './CategorySelect';
 import ImageUpload from './ImageUpload';
@@ -36,6 +36,7 @@ export default function WishProductForm() {
     submitForm,
     resetForm,
     clearError,
+    clearUploadedImages,
   } = useWishProductStore();
 
   const [showSuccess, setShowSuccess] = useState(false);
@@ -89,6 +90,22 @@ export default function WishProductForm() {
       setShowSuccess(true);
     }
   }, [submitSuccess]);
+
+  // 監聽頁面離開事件，清除已上傳的圖片
+  React.useEffect(() => {
+    const handleBeforeUnload = () => {
+      clearUploadedImages();
+    };
+
+    // 監聽頁面離開事件
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      // 組件卸載時也清除已上傳的圖片
+      clearUploadedImages();
+    };
+  }, [clearUploadedImages]);
 
   return (
     <Box maxWidth="md" mx="auto">
@@ -336,7 +353,7 @@ export default function WishProductForm() {
                   name="images"
                   control={control}
                   render={({ field: { onChange } }) => (
-                    <ImageUpload onChange={handleImagesChange} maxFiles={5} />
+                    <ImageUpload onChange={handleImagesChange} maxFiles={1} />
                   )}
                 />
                 {errors.images && (

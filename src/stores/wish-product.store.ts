@@ -35,6 +35,7 @@ interface WishProductStore {
   removeImage: (id: string) => void;
   loadCategories: () => Promise<void>;
   resetForm: () => void;
+  clearUploadedImages: () => void;
   clearError: () => void;
 }
 
@@ -71,6 +72,7 @@ export const useWishProductStore = create<WishProductStore>((set, get) => ({
       formData.append('description', data.description);
       formData.append('categoryId', data.categoryId.toString());
       formData.append('region', data.region);
+      formData.append('expectedPrice', data.expectedPrice.toString());
 
       if (data.additionalInfo) {
         formData.append('additionalInfo', data.additionalInfo);
@@ -216,6 +218,12 @@ export const useWishProductStore = create<WishProductStore>((set, get) => ({
       formData: {},
       submitError: null,
       submitSuccess: false,
+      uploadedImages: [],
+    });
+  },
+
+  clearUploadedImages: () => {
+    set({
       uploadedImages: [],
     });
   },
