@@ -1,28 +1,28 @@
 'use client';
 
+import { WishProduct } from '@/lib/wish-products/types';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CategoryIcon from '@mui/icons-material/Category';
+import CloseIcon from '@mui/icons-material/Close';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ImageIcon from '@mui/icons-material/Image';
+import PersonIcon from '@mui/icons-material/Person';
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Box,
-  Chip,
-  Divider,
   Avatar,
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
   IconButton,
   ImageList,
   ImageListItem,
+  Typography,
 } from '@mui/material';
-import { WishProduct } from '@/lib/wish-products/types';
-import CloseIcon from '@mui/icons-material/Close';
-import PersonIcon from '@mui/icons-material/Person';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import CategoryIcon from '@mui/icons-material/Category';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import ImageIcon from '@mui/icons-material/Image';
 
 interface ProductDetailDialogProps {
   open: boolean;
@@ -30,7 +30,11 @@ interface ProductDetailDialogProps {
   product: WishProduct | null;
 }
 
-export function ProductDetailDialog({ open, onClose, product }: ProductDetailDialogProps) {
+export function ProductDetailDialog({
+  open,
+  onClose,
+  product,
+}: ProductDetailDialogProps) {
   if (!product) return null;
 
   const formatDate = (date: Date) => {
@@ -46,13 +50,14 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
   // 處理圖片 URLs
   const getImageUrls = (imageUrls: string | string[] | undefined) => {
     if (!imageUrls) return [];
-    const urls = typeof imageUrls === 'string' ? imageUrls.split(',') : imageUrls;
+    const urls =
+      typeof imageUrls === 'string' ? imageUrls.split(',') : imageUrls;
     return urls
-      .filter(url => url && url.trim() !== '')
-      .map(url => {
+      .filter((url) => url && url.trim() !== '')
+      .map((url) => {
         const trimmedUrl = url.trim();
         if (!trimmedUrl.startsWith('http') && !trimmedUrl.startsWith('/')) {
-          return `/uploads/${trimmedUrl}`;
+          return `/api/serve-file/uploads/wish-products/${trimmedUrl}`;
         }
         return trimmedUrl;
       });
@@ -61,17 +66,23 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
   const imageUrls = getImageUrls(product.imageUrls || product.image_urls);
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
       maxWidth="sm"
       fullWidth
       PaperProps={{
-        sx: { borderRadius: 2 }
+        sx: { borderRadius: 2 },
       }}
     >
       <DialogTitle sx={{ m: 0, p: 2, pb: 1 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <Typography variant="h6" component="div">
             商品詳細資訊
           </Typography>
@@ -84,7 +95,7 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
           </IconButton>
         </Box>
       </DialogTitle>
-      
+
       <DialogContent dividers sx={{ p: 3 }}>
         {/* 圖片區域 */}
         {imageUrls.length > 0 && (
@@ -136,17 +147,17 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
 
         {/* 類別標籤 */}
         <Box sx={{ mb: 3 }}>
-          <Chip 
+          <Chip
             icon={<CategoryIcon />}
-            label={product.category} 
-            color="primary" 
+            label={product.category}
+            color="primary"
             variant="outlined"
             sx={{ mr: 1 }}
           />
-          <Chip 
+          <Chip
             icon={<FavoriteIcon />}
             label={`${product.wishCount || 0} 人許願`}
-            color="error" 
+            color="error"
             variant="filled"
           />
         </Box>
@@ -211,7 +222,9 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
           {/* 最後更新 */}
           {product.updatedAt && product.updatedAt !== product.createdAt && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <CalendarTodayIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
+              <CalendarTodayIcon
+                sx={{ color: 'text.secondary', fontSize: 20 }}
+              />
               <Box>
                 <Typography variant="caption" color="text.secondary">
                   最後更新
@@ -231,13 +244,13 @@ export function ProductDetailDialog({ open, onClose, product }: ProductDetailDia
           </Typography>
         </Box>
       </DialogContent>
-      
+
       <DialogActions sx={{ p: 2 }}>
         <Button onClick={onClose} variant="outlined">
           關閉
         </Button>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           startIcon={<FavoriteIcon />}
           disabled
           onClick={() => {

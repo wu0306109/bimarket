@@ -383,7 +383,7 @@ function ProductDetailDialog({
                   <Box
                     key={index}
                     component="img"
-                    src={`/uploads/wish-products/${url}`}
+                    src={`/api/serve-file/uploads/wish-products/${url}`}
                     alt={`商品圖片 ${index + 1}`}
                     sx={{
                       width: 100,
