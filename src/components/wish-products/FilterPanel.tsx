@@ -1,7 +1,7 @@
 'use client';
 
-import { getCategories } from '@/lib/wish-products/mockData';
 import { WishProductFilter } from '@/lib/wish-products/types';
+import { useWishProductStore } from '@/stores/wish-product.store';
 import ClearIcon from '@mui/icons-material/Clear';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
@@ -21,11 +21,18 @@ interface FilterPanelProps {
 }
 
 export function FilterPanel({ onFilterChange }: FilterPanelProps) {
-  const [categories] = useState(getCategories());
+  const { categories, loadCategories } = useWishProductStore();
   const [filters, setFilters] = useState<WishProductFilter>({
     sortBy: 'createdAt',
     sortOrder: 'desc',
   });
+
+  // 載入類別資料
+  useEffect(() => {
+    if (categories.length === 0) {
+      loadCategories();
+    }
+  }, [categories.length, loadCategories]);
 
   // 當篩選條件改變時通知父元件
   useEffect(() => {
@@ -89,8 +96,8 @@ export function FilterPanel({ onFilterChange }: FilterPanelProps) {
           >
             <MenuItem value="">全部類別</MenuItem>
             {categories.map((category) => (
-              <MenuItem key={category} value={category}>
-                {category}
+              <MenuItem key={category.id} value={category.name}>
+                {category.name}
               </MenuItem>
             ))}
           </TextField>

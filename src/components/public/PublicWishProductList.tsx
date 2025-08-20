@@ -120,7 +120,7 @@ export default function PublicWishProductList() {
       ) : (
         <Grid container spacing={3} justifyContent="space-around">
           {products.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={product.id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 400 }}>
                 <CardActionArea sx={{ flexGrow: 1 }}>
                   {product.imageUrls && product.imageUrls.length > 0 && (
