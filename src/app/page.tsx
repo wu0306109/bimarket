@@ -79,7 +79,8 @@ export default function Home() {
         </Grid>
       </Grid>
 
-      <Box mt={6} textAlign="center">
+      {/* WorkAround: 暫時註解，等待整合 */}
+      {/* <Box mt={6} textAlign="center">
         <Typography variant="h4" component="h2" gutterBottom>
           所有許願清單
         </Typography>
@@ -87,7 +88,7 @@ export default function Home() {
           以下是目前所有的許願商品，您可以瀏覽並查看詳情。
         </Typography>
         <PublicWishProductList />
-      </Box>
+      </Box> */}
 
       <Box mt={6} textAlign="center">
         <Typography variant="body2" color="textSecondary">
