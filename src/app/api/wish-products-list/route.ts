@@ -29,7 +29,22 @@ export async function GET(request: NextRequest) {
 
     // 套用篩選條件
     if (category) {
-      products = products.filter((p) => p.categoryId.toString() === category);
+      // 根據類別名稱找到對應的 categoryId
+      const categoryMap: Record<string, number> = {
+        電子產品: 1,
+        服飾配件: 2,
+        美妝保養: 3,
+        食品飲料: 4,
+        家居生活: 5,
+        運動健身: 6,
+        圖書文具: 7,
+        玩具遊戲: 8,
+        其他: 9,
+      };
+      const categoryId = categoryMap[category];
+      if (categoryId) {
+        products = products.filter((p) => p.categoryId === categoryId);
+      }
     }
 
     if (minPrice !== null) {
@@ -90,9 +105,9 @@ export async function GET(request: NextRequest) {
         category: getCategoryName(product.categoryId),
         region: product.region,
         status: product.status,
-        expectedPrice: product.expectedPrice || 0,
+        expectedPrice: Number(product.expectedPrice) || 0,
         currency: product.currency || 'TWD',
-        wishCount: product.wishCount || 0,
+        wishCount: Number(product.wishCount) || 0,
         imageUrl:
           product.imageUrls?.[0] || product.image_urls?.split(',')[0] || null,
         imageUrls:
