@@ -252,7 +252,7 @@ async function recordFileUploads(
       });
     }
 
-    await ErrorHandler.safeWriteCSV<FileUpload>(
+    await ErrorHandler.safeWriteCSV(
       csvService,
       'file-uploads.csv',
       uploadRecords,

@@ -1,3 +1,5 @@
+'use client';
+
 import { Favorite, ShoppingCart } from '@mui/icons-material';
 import {
   Box,
@@ -9,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
+import PublicWishProductList from '@/components/public/PublicWishProductList';
 
 export default function Home() {
   return (
@@ -46,6 +49,16 @@ export default function Home() {
             </Button>
           </CardContent>
         </Card>
+      </Box>
+
+      <Box mt={6} textAlign="center">
+        <Typography variant="h4" component="h2" gutterBottom>
+          所有許願清單
+        </Typography>
+        <Typography variant="body1" color="textSecondary" mb={3}>
+          以下是目前所有的許願商品，您可以瀏覽並查看詳情。
+        </Typography>
+        <PublicWishProductList />
       </Box>
 
       <Box mt={6} textAlign="center">

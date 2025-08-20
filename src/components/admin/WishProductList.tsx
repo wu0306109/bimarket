@@ -591,8 +591,86 @@ export default function WishProductList() {
               </Button>
               <Button
                 startIcon={<DownloadIcon />}
-                onClick={() => {
-                  /* TODO: 實作匯出功能 */
+                onClick={async () => {
+                  setLoading(true);
+                  try {
+                    // Fetch all wish products without pagination
+                    const response = await fetch('/api/wish-products?limit=9999'); // Adjust limit as needed, or remove for true all
+                    const result: ApiResponse<PaginatedResponse<WishProduct>> =
+                      await response.json();
+
+                    if (!result.success) {
+                      throw new Error(result.error?.message || '匯出失敗');
+                    }
+
+                    const productsToExport = result.data?.items || [];
+
+                    if (productsToExport.length === 0) {
+                      alert('沒有資料可以匯出。');
+                      return;
+                    }
+
+                    // Prepare CSV header
+                    const headers = [
+                      'ID',
+                      '商品名稱',
+                      '商品類別',
+                      '期望價格',
+                      '所在領域',
+                      '狀態',
+                      '商品描述',
+                      '補充資訊',
+                      '圖片連結',
+                      '建立時間',
+                      '更新時間',
+                    ];
+                    const csvRows = [headers.join(',')];
+
+                    // Map data to CSV rows
+                    productsToExport.forEach((product) => {
+                      const categoryName = getCategoryName(product.categoryId);
+                      const imageUrls = product.imageUrls
+                        ? product.imageUrls.map(url => `http://localhost:3000/uploads/wish-products/${url}`).join(';')
+                        : '';
+                      const row = [
+                        `"${product.id}"`,
+                        `"${product.name}"`,
+                        `"${categoryName}"`,
+                        `"${product.expectedPrice}"`,
+                        `"${product.region}"`,
+                        `"${getStatusText(product.status)}"`,
+                        `"${product.description.replace(/"/g, '""')}"`, // Escape double quotes
+                        `"${(product.additionalInfo || '').replace(/"/g, '""')}"`,
+                        `"${imageUrls}"`,
+                        `"${new Date(product.createdAt).toLocaleString('zh-TW')}"`,
+                        `"${new Date(product.updatedAt).toLocaleString('zh-TW')}"`,
+                      ];
+                      csvRows.push(row.join(','));
+                    });
+
+                    const csvString = csvRows.join('\n');
+                    const blob = new Blob([
+                      '\uFEFF', // Add UTF-8 BOM
+                      csvString,
+                    ], {
+                      type: 'text/csv;charset=utf-8;',
+                    });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.setAttribute(
+                      'download',
+                      `wish_products_${new Date().toISOString()}.csv`,
+                    );
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  } catch (err) {
+                    setError(
+                      err instanceof Error ? err.message : '匯出商品清單失敗',
+                    );
+                  } finally {
+                    setLoading(false);
+                  }
                 }}
               >
                 匯出
