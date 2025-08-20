@@ -23,9 +23,9 @@ const categoriesData = `id,name,description,is_active,sort_order,created_at,upda
 4,"食品飲料","零食、飲料、保健食品等",true,4,"2024-01-01T00:00:00Z","2024-01-01T00:00:00Z"
 5,"居家生活","家具、家電、生活用品等",true,5,"2024-01-01T00:00:00Z","2024-01-01T00:00:00Z"`;
 
-// 建立空的許願商品檔案
+// 建立空的許願商品檔案（使用統一的snake_case格式）
 const wishProductsHeader =
-  'id,name,description,category_id,region,additional_info,image_urls,status,user_id,created_at,updated_at';
+  'id,name,description,category_id,region,expected_price,currency,wish_count,additional_info,image_urls,status,user_id,created_at,updated_at';
 
 // 建立空的檔案上傳記錄
 const fileUploadsHeader =

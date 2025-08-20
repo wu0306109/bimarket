@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       description: formData.get('description'),
       categoryId: parseInt(formData.get('categoryId') as string),
       region: formData.get('region'),
+      expectedPrice: parseFloat(formData.get('expectedPrice') as string),
       additionalInfo: formData.get('additionalInfo') || undefined,
     };
 
@@ -68,9 +69,13 @@ export async function POST(request: NextRequest) {
       description: validatedData.description,
       categoryId: validatedData.categoryId,
       region: validatedData.region,
+      expectedPrice: validatedData.expectedPrice,
+      currency: 'TWD',
+      wishCount: 1, // 新商品最低許願人數為1（發布者自己）
       additionalInfo: validatedData.additionalInfo || '',
       imageUrls: imageUrls,
-      status: 'completed',
+      image_urls: imageUrls.join(','), // 相容 CSV 格式
+      status: 'pending', // 新提交的商品預設為 pending 狀態
       userId: '', // 暫時空值，後續可整合用戶系統
       createdAt: new Date(),
       updatedAt: new Date(),

@@ -87,7 +87,7 @@ function FilterDialog({
       <DialogTitle>篩選條件</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormControl
               fullWidth
               sx={{
@@ -123,7 +123,7 @@ function FilterDialog({
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormControl
               fullWidth
               sx={{
@@ -153,7 +153,7 @@ function FilterDialog({
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               fullWidth
               label="開始日期"
@@ -166,7 +166,7 @@ function FilterDialog({
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               fullWidth
               label="結束日期"
@@ -179,7 +179,7 @@ function FilterDialog({
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormControl
               fullWidth
               sx={{
@@ -207,7 +207,7 @@ function FilterDialog({
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormControl
               fullWidth
               sx={{
@@ -303,7 +303,7 @@ function ProductDetailDialog({
       <DialogTitle>許願商品詳情</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" color="textSecondary">
               商品ID
             </Typography>
@@ -312,7 +312,7 @@ function ProductDetailDialog({
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" color="textSecondary">
               狀態
             </Typography>
@@ -323,7 +323,7 @@ function ProductDetailDialog({
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Typography variant="subtitle2" color="textSecondary">
               商品名稱
             </Typography>
@@ -332,7 +332,7 @@ function ProductDetailDialog({
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" color="textSecondary">
               商品類別
             </Typography>
@@ -341,7 +341,7 @@ function ProductDetailDialog({
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" color="textSecondary">
               所在領域
             </Typography>
@@ -350,7 +350,7 @@ function ProductDetailDialog({
             </Typography>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Typography variant="subtitle2" color="textSecondary">
               商品描述
             </Typography>
@@ -360,7 +360,7 @@ function ProductDetailDialog({
           </Grid>
 
           {product.additionalInfo && (
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Typography variant="subtitle2" color="textSecondary">
                 補充資訊
               </Typography>
@@ -374,7 +374,7 @@ function ProductDetailDialog({
           )}
 
           {product.imageUrls && product.imageUrls.length > 0 && (
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Typography variant="subtitle2" color="textSecondary">
                 商品圖片
               </Typography>
@@ -383,7 +383,7 @@ function ProductDetailDialog({
                   <Box
                     key={index}
                     component="img"
-                    src={`/uploads/wish-products/${url}`}
+                    src={`/api/serve-file/uploads/wish-products/${url}`}
                     alt={`商品圖片 ${index + 1}`}
                     sx={{
                       width: 100,
@@ -398,7 +398,7 @@ function ProductDetailDialog({
             </Grid>
           )}
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" color="textSecondary">
               建立時間
             </Typography>
@@ -407,7 +407,7 @@ function ProductDetailDialog({
             </Typography>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="subtitle2" color="textSecondary">
               更新時間
             </Typography>

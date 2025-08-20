@@ -40,7 +40,6 @@ export class CSVDataService {
         stream
           .pipe(
             csvParser({
-              skipEmptyLines: true,
               mapHeaders: ({ header }) => header.trim(),
             }),
           )
@@ -93,8 +92,8 @@ export class CSVDataService {
       const csvContent = csvStringify(transformedData, {
         header: true,
         quoted: true,
-        quotedEmpty: true,
-        quotedString: true,
+        quoted_empty: true,
+        quoted_string: true,
       });
 
       await fs.writeFile(filePath, csvContent, 'utf-8');
@@ -116,7 +115,13 @@ export class CSVDataService {
       }
 
       // 處理數字 (但保持 id 為字串)
-      ['category_id', 'sort_order', 'file_size', 'like_count'].forEach((field) => {
+      [
+        'category_id',
+        'sort_order',
+        'file_size',
+        'expected_price',
+        'wish_count',
+      ].forEach((field) => {
         if (transformed[field] !== undefined && transformed[field] !== '') {
           const num = parseInt(transformed[field]);
           if (!isNaN(num)) {
@@ -163,7 +168,8 @@ export class CSVDataService {
         mime_type: 'mimeType',
         related_table: 'relatedTable',
         related_id: 'relatedId',
-        like_count: 'likeCount',
+        wish_count: 'wishCount',
+        expected_price: 'expectedPrice',
       };
 
       Object.keys(snakeToCamelMap).forEach((snakeKey) => {
@@ -221,7 +227,8 @@ export class CSVDataService {
       mimeType: 'mime_type',
       relatedTable: 'related_table',
       relatedId: 'related_id',
-      likeCount: 'like_count',
+      wishCount: 'wish_count',
+      expectedPrice: 'expected_price',
     };
 
     Object.keys(camelToSnakeMap).forEach((camelKey) => {
@@ -304,9 +311,7 @@ export class CSVDataService {
   }
 
   // 增加許願商品的點讚數
-  async incrementWishProductLikeCount(
-    productId: string,
-  ): Promise<boolean> {
+  async incrementWishProductLikeCount(productId: string): Promise<boolean> {
     try {
       const products = await this.readCSV<any>('wish-products.csv');
       const productIndex = products.findIndex((p) => p.id === productId);
@@ -321,11 +326,13 @@ export class CSVDataService {
       products[productIndex].likeCount = currentLikes + 1;
 
       await this.secureWriteCSV('wish-products.csv', products);
-      console.log(`許願商品 ${productId} 的點讚數已增加到 ${products[productIndex].likeCount}`);
+      console.log(
+        `許願商品 ${productId} 的點讚數已增加到 ${products[productIndex].likeCount}`,
+      );
       return true;
     } catch (error) {
       console.error(`增加許願商品點讚數失敗 (${productId}):`, error);
-      throw new Error(`UPDATE_LIKE_COUNT_ERROR: ${productId}`);
+      throw new Error(`UPDATE_wishCount_ERROR: ${productId}`);
     }
   }
 }
