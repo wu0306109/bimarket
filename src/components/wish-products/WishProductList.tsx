@@ -13,6 +13,7 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
+import { AnimatePresence, m } from 'framer-motion';
 
 import { WishProductCard } from './WishProductCard';
 
@@ -61,7 +62,13 @@ export function WishProductList({
       <Grid container spacing={3}>
         {[...Array(8)].map((_, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
-            <ProductCardSkeleton />
+            <m.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.03 }}
+            >
+              <ProductCardSkeleton />
+            </m.div>
           </Grid>
         ))}
       </Grid>
@@ -105,24 +112,45 @@ export function WishProductList({
   return (
     <>
       <Box sx={{ mb: 2 }}>
-        <Typography variant="body2" color="text.secondary">
-          共找到 {total} 個許願商品
-          {products.length > 0 && <span>，已顯示 {products.length} 個</span>}
-        </Typography>
+        <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            共找到 {total} 個許願商品
+            {products.length > 0 && <span>，已顯示 {products.length} 個</span>}
+          </Typography>
+        </m.div>
       </Box>
 
       <Grid container spacing={3}>
-        {products.map((product) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={product.id}>
-            <WishProductCard product={product} onClick={onProductClick} />
-          </Grid>
-        ))}
+        <AnimatePresence mode="popLayout">
+          {products.map((product, index) => (
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={product.id}>
+              <m.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ delay: index * 0.02 }}
+              >
+                <WishProductCard product={product} onClick={onProductClick} />
+              </m.div>
+            </Grid>
+          ))}
+        </AnimatePresence>
       </Grid>
 
       {/* 載入更多指示器 */}
       {loadingMore && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 2 }}>
-          <CircularProgress size={40} />
+          <m.div
+            initial={{ scale: 0.9, opacity: 0.6 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              repeat: Infinity,
+              repeatType: 'mirror',
+              duration: 0.8,
+            }}
+          >
+            <CircularProgress size={40} />
+          </m.div>
         </Box>
       )}
 

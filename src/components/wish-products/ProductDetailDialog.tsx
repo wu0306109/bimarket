@@ -23,6 +23,7 @@ import {
   ImageListItem,
   Typography,
 } from '@mui/material';
+import { m } from 'framer-motion';
 
 interface ProductDetailDialogProps {
   open: boolean;
@@ -83,9 +84,11 @@ export function ProductDetailDialog({
             justifyContent: 'space-between',
           }}
         >
-          <Typography variant="h6" component="div">
-            商品詳細資訊
-          </Typography>
+          <m.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
+            <Typography variant="h6" component="div">
+              商品詳細資訊
+            </Typography>
+          </m.div>
           <IconButton
             aria-label="close"
             onClick={onClose}
@@ -120,7 +123,7 @@ export function ProductDetailDialog({
               <ImageList cols={2} gap={8}>
                 {imageUrls.map((url, index) => (
                   <ImageListItem key={index}>
-                    <img
+                    <m.img
                       src={url}
                       alt={`${product.productName} ${index + 1}`}
                       loading="lazy"
@@ -128,10 +131,14 @@ export function ProductDetailDialog({
                         borderRadius: 8,
                         objectFit: 'cover',
                         backgroundColor: '#f5f5f5',
+                        width: '100%',
+                        height: '100%',
                       }}
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
                     />
                   </ImageListItem>
                 ))}
@@ -147,19 +154,21 @@ export function ProductDetailDialog({
 
         {/* 類別標籤 */}
         <Box sx={{ mb: 3 }}>
-          <Chip
-            icon={<CategoryIcon />}
-            label={product.category}
-            color="primary"
-            variant="outlined"
-            sx={{ mr: 1 }}
-          />
-          <Chip
-            icon={<FavoriteIcon />}
-            label={`${product.wishCount || 0} 人許願`}
-            color="error"
-            variant="filled"
-          />
+          <m.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
+            <Chip
+              icon={<CategoryIcon />}
+              label={product.category}
+              color="primary"
+              variant="outlined"
+              sx={{ mr: 1 }}
+            />
+            <Chip
+              icon={<FavoriteIcon />}
+              label={`${product.wishCount || 0} 人許願`}
+              color="error"
+              variant="filled"
+            />
+          </m.div>
         </Box>
 
         {/* 商品描述 */}
@@ -182,9 +191,14 @@ export function ProductDetailDialog({
               期望價格
             </Typography>
           </Box>
-          <Typography variant="h4" color="primary" fontWeight="bold">
-            NT$ {product.expectedPrice?.toLocaleString() || '0'}
-          </Typography>
+          <m.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <Typography variant="h4" color="primary" fontWeight="bold">
+              NT$ {product.expectedPrice?.toLocaleString() || '0'}
+            </Typography>
+          </m.div>
         </Box>
 
         <Divider sx={{ my: 2 }} />
@@ -249,17 +263,18 @@ export function ProductDetailDialog({
         <Button onClick={onClose} variant="outlined">
           關閉
         </Button>
-        <Button
-          variant="contained"
-          startIcon={<FavoriteIcon />}
-          disabled
-          onClick={() => {
-            // 未來可以實作加入許願功能
-            onClose();
-          }}
-        >
-          我也想要
-        </Button>
+        <m.div whileTap={{ scale: 0.98 }}>
+          <Button
+            variant="contained"
+            startIcon={<FavoriteIcon />}
+            disabled
+            onClick={() => {
+              onClose();
+            }}
+          >
+            我也想要
+          </Button>
+        </m.div>
       </DialogActions>
     </Dialog>
   );
