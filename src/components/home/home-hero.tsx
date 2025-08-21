@@ -54,7 +54,7 @@ export default function HomeHero() {
           >
             <Card elevation={4} sx={{ height: '100%' }}>
               <CardContent sx={{ textAlign: 'center', p: 4 }}>
-                <Favorite sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
+                <Favorite sx={{ fontSize: 60, color: 'black', mb: 2 }} />
                 <Typography variant="h5" gutterBottom>
                   許願商品
                 </Typography>
@@ -66,7 +66,7 @@ export default function HomeHero() {
                   href="/wish-product"
                   variant="contained"
                   size="large"
-                  startIcon={<Favorite />}
+                  startIcon={<Favorite sx={{ color: 'black' }} />}
                   fullWidth
                 >
                   立即許願

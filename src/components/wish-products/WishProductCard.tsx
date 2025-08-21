@@ -159,7 +159,7 @@ export function WishProductCard({ product, onClick }: WishProductCardProps) {
 
                 {/* 許願人數 */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <FavoriteIcon sx={{ fontSize: 18, color: 'error.main' }} />
+                  <FavoriteIcon sx={{ fontSize: 18, color: 'black' }} />
                   <Typography variant="body2" color="text.secondary">
                     {product.wishCount || 0} 人許願
                   </Typography>
