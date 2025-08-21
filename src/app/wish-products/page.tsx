@@ -15,6 +15,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import { m } from 'framer-motion';
 import Link from 'next/link';
 import { useCallback, useState } from 'react';
 
@@ -78,7 +79,9 @@ export default function WishProductsPage() {
       {/* 主要內容區域 */}
       <Container maxWidth="lg" sx={{ pt: 12, pb: 4 }}>
         {/* 篩選面板 */}
-        <FilterPanel onFilterChange={handleFilterChange} />
+        <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <FilterPanel onFilterChange={handleFilterChange} />
+        </m.div>
 
         {/* 商品清單 */}
         <WishProductList
