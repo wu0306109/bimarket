@@ -67,7 +67,7 @@ export default function HomeHero() {
                   href="/wish-product"
                   variant="contained"
                   size="large"
-                  startIcon={<Favorite />}
+                  startIcon={<Favorite sx={{ color: 'black' }} />}
                   fullWidth
                 >
                   立即許願

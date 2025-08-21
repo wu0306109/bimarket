@@ -156,7 +156,7 @@ export default function PublicWishProductList() {
                   </Typography>
                   <Box display="flex" alignItems="center">
                     <HeartIcon
-                      sx={{ cursor: 'pointer', mr: 0.5 }}
+                      sx={{ cursor: 'pointer', mr: 0.5, color: 'black' }}
                       onClick={() => handleLike(product.id)}
                     />
                     <Typography variant="body2">
