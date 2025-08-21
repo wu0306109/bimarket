@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { m } from 'framer-motion';
+import { pink } from '@mui/material/colors';
 import Link from 'next/link';
 
 export default function HomeHero() {
@@ -54,7 +55,7 @@ export default function HomeHero() {
           >
             <Card elevation={4} sx={{ height: '100%' }}>
               <CardContent sx={{ textAlign: 'center', p: 4 }}>
-                <Favorite sx={{ fontSize: 60, color: 'black', mb: 2 }} />
+                <Favorite sx={{ fontSize: 60, color: pink[400], mb: 2 }} />
                 <Typography variant="h5" gutterBottom>
                   許願商品
                 </Typography>
