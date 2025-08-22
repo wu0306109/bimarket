@@ -1,4 +1,5 @@
 import MuiThemeProvider from '@/ui/mui-theme-provider';
+import Footer from '@/ui/footer';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Roboto } from 'next/font/google';
@@ -40,7 +41,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.className}`}
       >
         <AppRouterCacheProvider options={{ key: 'mui' }}>
-          <MuiThemeProvider>{children}</MuiThemeProvider>
+          <MuiThemeProvider>
+            {children}
+            <Footer />
+          </MuiThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
