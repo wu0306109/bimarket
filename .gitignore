@@ -45,3 +45,5 @@ storybook-static
 
 .claude
 data/backups/*
+
+.env.local
