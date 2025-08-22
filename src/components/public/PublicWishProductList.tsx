@@ -21,7 +21,11 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-export default function PublicWishProductList() {
+interface Props {
+  readonly limit?: number;
+}
+
+export default function PublicWishProductList({ limit }: Readonly<Props>) {
   const [products, setProducts] = useState<WishProduct[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [loading, setLoading] = useState(false);
@@ -32,8 +36,8 @@ export default function PublicWishProductList() {
     setError(null);
 
     try {
-      // Fetch all wish products without pagination for public display
-      const response = await fetch('/api/wish-products?limit=9999');
+      // Fetch wish products with optional limit for preview mode
+      const response = await fetch(`/api/wish-products?limit=${limit ?? 9999}`);
       const result: ApiResponse<PaginatedResponse<WishProduct>> =
         await response.json();
 
