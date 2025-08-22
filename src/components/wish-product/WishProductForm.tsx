@@ -21,7 +21,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import CategorySelect from './CategorySelect';
@@ -44,7 +44,7 @@ export default function WishProductForm() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     setValue,
     watch,
     reset,
@@ -62,6 +62,72 @@ export default function WishProductForm() {
   });
 
   const watchedImages = watch('images');
+
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const lastGenRef = useRef<number | null>(null);
+
+  const nameVal = watch('name');
+  const categoryIdVal = watch('categoryId');
+  const regionVal = watch('region');
+
+  const canGenerate = useMemo(
+    () => !!nameVal && !!categoryIdVal && !!regionVal,
+    [nameVal, categoryIdVal, regionVal],
+  );
+
+  const handleAIGenerate = async () => {
+    setAiError(null);
+    if (!canGenerate) {
+      setAiError('請先填寫「商品名稱」、「類別」與「地區」再嘗試產生');
+      return;
+    }
+
+    try {
+      setAiLoading(true);
+
+      const controller = new AbortController();
+      const t = setTimeout(() => controller.abort(), 10000);
+
+      const resp = await fetch('/api/ai/generate-wish', {
+        method: 'POST',
+        signal: controller.signal,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: nameVal,
+          categoryId: categoryIdVal,
+          region: regionVal,
+          additionalInfo: watch('additionalInfo') || '',
+        }),
+      }).finally(() => clearTimeout(t));
+
+      const json = await resp.json();
+      if (!resp.ok || !json?.success) {
+        throw new Error(json?.error?.message || 'AI 生成失敗');
+      }
+
+      const { expectedPrice, description } = json.data || {};
+
+      if (!dirtyFields.expectedPrice) {
+        setValue('expectedPrice', Number(expectedPrice) || 0, {
+          shouldValidate: true,
+          shouldDirty: false,
+        });
+      }
+      if (!dirtyFields.description) {
+        setValue('description', description || '', {
+          shouldValidate: true,
+          shouldDirty: false,
+        });
+      }
+
+      lastGenRef.current = Date.now();
+    } catch (e: any) {
+      setAiError(e?.message || 'AI 生成失敗，請稍後重試');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const onSubmit = async (data: WishProductFormData) => {
     try {
@@ -145,6 +211,31 @@ export default function WishProductForm() {
                 </Typography>
 
                 <Grid container spacing={3}>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid size="grow">
+                      <Typography variant="body2" color="text.secondary">
+                        使用 AI 快速產生價格與描述（不會覆蓋你已修改的內容）
+                      </Typography>
+                    </Grid>
+                    <Grid>
+                      <Button
+                        variant="outlined"
+                        onClick={handleAIGenerate}
+                        disabled={aiLoading}
+                      >
+                        {aiLoading ? '產生中…' : '由 AI 產生'}
+                      </Button>
+                    </Grid>
+                  </Grid>
+
+                  {aiError && (
+                    <Grid size={12}>
+                      <Alert severity="warning" onClose={() => setAiError(null)}>
+                        {aiError}
+                      </Alert>
+                    </Grid>
+                  )}
+
                   {/* 商品名稱 */}
                   <Grid size={12}>
                     <Controller
