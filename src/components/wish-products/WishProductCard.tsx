@@ -2,6 +2,7 @@
 
 import { WishProduct } from '@/lib/wish-products/types';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PersonIcon from '@mui/icons-material/Person';
 import {
   Avatar,
@@ -14,6 +15,9 @@ import {
   Typography,
 } from '@mui/material';
 import { m } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { usePetitionStore } from '@/stores/petition.store';
+import { Snackbar, Alert } from '@mui/material';
 
 interface WishProductCardProps {
   product: WishProduct;
@@ -157,18 +161,82 @@ export function WishProductCard({ product, onClick }: WishProductCardProps) {
                   </Typography>
                 </Box>
 
-                {/* 許願人數 */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <FavoriteIcon sx={{ fontSize: 18, color: 'black' }} />
-                  <Typography variant="body2" color="text.secondary">
-                    {product.wishCount || 0} 人許願
-                  </Typography>
-                </Box>
+                {/* 連署（愛心） */}
+                <PetitionButton productId={product.id} initialCount={product.wishCount || 0} />
               </Box>
             </Box>
           </CardContent>
         </CardActionArea>
       </Card>
     </m.div>
+  );
+}
+
+function PetitionButton({ productId, initialCount }: { productId: string; initialCount: number }) {
+  const store = usePetitionStore();
+  const [snack, setSnack] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>(
+    { open: false, message: '', severity: 'success' },
+  );
+
+  useEffect(() => {
+    store.ensure(productId, initialCount);
+    // 首次掛載取得狀態
+    (async () => {
+      try {
+        const res = await fetch(`/api/wish-products/${productId}/petition/status`);
+        const data = await res.json();
+        if (data?.success && typeof data.data?.petitioned === 'boolean') {
+          store.setStatus(productId, data.data.petitioned);
+        }
+      } catch {}
+    })();
+  }, [productId]);
+
+  const state = store.byProductId[productId];
+  const petitioned = state?.petitioned || false;
+  const count = state?.wishCount ?? initialCount;
+  const loading = state?.loading || false;
+
+  return (
+    <>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        {petitioned ? (
+          <FavoriteIcon
+            sx={{ fontSize: 18, color: 'error.main', cursor: loading ? 'not-allowed' : 'pointer' }}
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (!loading) {
+                const ok = await store.togglePetition(productId);
+                setSnack({ open: true, message: ok ? '已取消連署' : '操作失敗，已回復', severity: ok ? 'success' : 'error' });
+              }
+            }}
+          />
+        ) : (
+          <FavoriteBorderIcon
+            sx={{ fontSize: 18, color: 'text.primary', cursor: loading ? 'not-allowed' : 'pointer' }}
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (!loading) {
+                const ok = await store.togglePetition(productId);
+                setSnack({ open: true, message: ok ? '連署成功' : '操作失敗，已回復', severity: ok ? 'success' : 'error' });
+              }
+            }}
+          />
+        )}
+        <Typography variant="body2" color="text.secondary">
+          {count} 人許願
+        </Typography>
+      </Box>
+      <Snackbar
+        open={snack.open}
+        autoHideDuration={2000}
+        onClose={() => setSnack((s) => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity={snack.severity} sx={{ width: '100%' }}>
+          {snack.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

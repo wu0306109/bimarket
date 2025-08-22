@@ -5,7 +5,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CategoryIcon from '@mui/icons-material/Category';
 import CloseIcon from '@mui/icons-material/Close';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+// Favorite icons imported below to avoid duplicate symbol imports
 import ImageIcon from '@mui/icons-material/Image';
 import PersonIcon from '@mui/icons-material/Person';
 import {
@@ -24,6 +24,11 @@ import {
   Typography,
 } from '@mui/material';
 import { m } from 'framer-motion';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { usePetitionStore } from '@/stores/petition.store';
+import { useEffect, useState } from 'react';
+import { Snackbar, Alert } from '@mui/material';
 
 interface ProductDetailDialogProps {
   open: boolean;
@@ -37,6 +42,13 @@ export function ProductDetailDialog({
   product,
 }: ProductDetailDialogProps) {
   if (!product) return null;
+
+  const storeForDialog = usePetitionStore();
+  useEffect(() => {
+    storeForDialog.ensure(product.id, product.wishCount || 0);
+  }, [product.id]);
+  const dialogPetitionState = usePetitionStore((s) => s.byProductId[product.id]);
+  const currentWishCount = dialogPetitionState?.wishCount ?? (product.wishCount || 0);
 
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('zh-TW', {
@@ -164,7 +176,7 @@ export function ProductDetailDialog({
             />
             <Chip
               icon={<FavoriteIcon />}
-              label={`${product.wishCount || 0} 人許願`}
+              label={`${currentWishCount} 人許願`}
               color="error"
               variant="filled"
             />
@@ -263,19 +275,66 @@ export function ProductDetailDialog({
         <Button onClick={onClose} variant="outlined">
           關閉
         </Button>
-        <m.div whileTap={{ scale: 0.98 }}>
-          <Button
-            variant="contained"
-            startIcon={<FavoriteIcon />}
-            disabled
-            onClick={() => {
-              onClose();
-            }}
-          >
-            我也想要
-          </Button>
-        </m.div>
+        {product && <DetailPetitionButton productId={product.id} initialCount={product.wishCount || 0} />}
       </DialogActions>
     </Dialog>
+  );
+}
+
+function DetailPetitionButton({ productId, initialCount }: { productId: string; initialCount: number }) {
+  const store = usePetitionStore();
+  const [snack, setSnack] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>(
+    { open: false, message: '', severity: 'success' },
+  );
+
+  useEffect(() => {
+    store.ensure(productId, initialCount);
+    (async () => {
+      try {
+        const res = await fetch(`/api/wish-products/${productId}/petition/status`);
+        const data = await res.json();
+        if (data?.success && typeof data.data?.petitioned === 'boolean') {
+          store.setStatus(productId, data.data.petitioned);
+        }
+      } catch {}
+    })();
+  }, [productId]);
+
+  const state = store.byProductId[productId];
+  const petitioned = state?.petitioned || false;
+  const loading = state?.loading || false;
+  const count = state?.wishCount ?? initialCount;
+
+  return (
+    <>
+      <m.div whileTap={{ scale: loading ? 1 : 0.98 }}>
+        <Button
+          variant={petitioned ? 'outlined' : 'contained'}
+          color="secondary"
+          startIcon={petitioned ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          disabled={loading}
+          onClick={async () => {
+            const ok = await store.togglePetition(productId);
+            setSnack({
+              open: true,
+              message: ok ? (petitioned ? '已取消許願' : '許願成功') : '操作失敗，已回復',
+              severity: ok ? 'success' : 'error',
+            });
+          }}
+        >
+          {petitioned ? '取消許願' : '我要許願'}
+        </Button>
+      </m.div>
+      <Snackbar
+        open={snack.open}
+        autoHideDuration={2000}
+        onClose={() => setSnack((s) => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity={snack.severity} sx={{ width: '100%' }}>
+          {snack.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

@@ -16,6 +16,8 @@ import {
 import { AnimatePresence, m } from 'framer-motion';
 
 import { WishProductCard } from './WishProductCard';
+import { useEffect } from 'react';
+import { usePetitionStore } from '@/stores/petition.store';
 
 interface WishProductListProps {
   filters?: WishProductFilter;
@@ -47,6 +49,14 @@ export function WishProductList({
 }: WishProductListProps) {
   const { products, loading, loadingMore, error, hasMore, total, loadMore } =
     useInfiniteWishProducts(filters);
+
+  // 同步初始 wishCount 到全域連署 store（供列表/詳情共用）
+  const petitionStore = usePetitionStore();
+  useEffect(() => {
+    if (products && products.length > 0) {
+      petitionStore.hydrateFromList(products.map((p) => ({ id: p.id, wishCount: p.wishCount })));
+    }
+  }, [products]);
 
   // 設置無限滾動
   useInfiniteScroll({
