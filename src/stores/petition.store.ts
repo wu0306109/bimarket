@@ -53,15 +53,20 @@ export const usePetitionStore = create<PetitionStore>((set, get) => ({
   },
 
   setStatus(productId, petitioned) {
-    set((state) => ({
-      byProductId: {
-        ...state.byProductId,
-        [productId]: {
-          ...(state.byProductId[productId] || { petitioned: false, wishCount: 0, loading: false }),
-          petitioned,
+    set((state) => {
+      const curr = state.byProductId[productId] || { petitioned: false, wishCount: 0, loading: false };
+      // 若正在 loading（使用者剛進行操作），避免以舊狀態覆寫樂觀更新；完成後會依伺服器結果校正
+      if (curr.loading) return state;
+      return {
+        byProductId: {
+          ...state.byProductId,
+          [productId]: {
+            ...curr,
+            petitioned,
+          },
         },
-      },
-    }));
+      };
+    });
   },
 
   optimisticToggle(productId) {
@@ -89,19 +94,49 @@ export const usePetitionStore = create<PetitionStore>((set, get) => ({
 
   async togglePetition(productId) {
     const prev = get().byProductId[productId];
+    // 請求進行中時避免重覆送出
+    if (prev?.loading) return false;
+
     get().optimisticToggle(productId);
     try {
       const method = prev?.petitioned ? 'DELETE' : 'POST';
       const res = await fetch(`/api/wish-products/${productId}/petition`, { method });
       if (!res.ok) throw new Error('petition failed');
 
-      // 若伺服器回應要求設定 cookie，需要讀取回傳即可；此處僅完成狀態
-      set((state) => ({
-        byProductId: {
-          ...state.byProductId,
-          [productId]: { ...(state.byProductId[productId] as PetitionStateItem), loading: false },
-        },
-      }));
+      const body = await res.json().catch(() => null);
+      const petitionedFromServer: boolean =
+        body?.data?.petitioned === true || body?.data?.petitioned === false
+          ? body.data.petitioned
+          : method === 'POST';
+      const idempotent: boolean = body?.data?.idempotent === true;
+
+      set((state) => {
+        const curr = state.byProductId[productId] as PetitionStateItem;
+        let nextCount = curr.wishCount;
+
+        // idempotent 代表伺服器未改變實際計數，需回復樂觀更新的計數變化
+        if (idempotent) {
+          if (method === 'POST') {
+            // 樂觀 +1 應回退
+            nextCount = Math.max(0, curr.wishCount - 1);
+          } else {
+            // 樂觀 -1 應回退
+            nextCount = curr.wishCount + 1;
+          }
+        }
+
+        return {
+          byProductId: {
+            ...state.byProductId,
+            [productId]: {
+              petitioned: petitionedFromServer,
+              wishCount: nextCount,
+              loading: false,
+            },
+          },
+        };
+      });
+
       return true;
     } catch (e) {
       if (prev) get().rollback(productId, prev);
@@ -109,5 +144,3 @@ export const usePetitionStore = create<PetitionStore>((set, get) => ({
     }
   },
 }));
-
-
