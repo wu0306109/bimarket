@@ -18,20 +18,17 @@ export default function ContactSection() {
             任何合作或問題，歡迎透過以下管道與我們聯繫。
           </Typography>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mx: 'auto' }}>
-            <Button href="mailto:contact@bimarket.app" size="large" startIcon={<Email />} sx={{
-              color: 'common.white',
-              background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%)',
-              '&:hover': { background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #DB2777 100%)' },
-            }}>
+            
+            <Button href="mailto:contact@bimarket.app" size="large" startIcon={<Email />} variant="contained" color="primary">
               Email
             </Button>
-            <Button href="https://t.me/bimarket" target="_blank" rel="noreferrer" variant="outlined" size="large" startIcon={<Telegram />}>
+            <Button href="https://t.me/bimarket" target="_blank" rel="noreferrer" variant="contained" color="primary" size="large" startIcon={<Telegram />}>
               Telegram
             </Button>
-            <Button href="https://wa.me/0000000000" target="_blank" rel="noreferrer" variant="outlined" size="large" startIcon={<WhatsApp />}>
+            <Button href="https://wa.me/0000000000" target="_blank" rel="noreferrer" variant="contained" color="primary" size="large" startIcon={<WhatsApp />}>
               WhatsApp
             </Button>
-            <Button href="https://facebook.com/bimarket" target="_blank" rel="noreferrer" variant="outlined" size="large" startIcon={<Facebook />}>
+            <Button href="https://facebook.com/bimarket" target="_blank" rel="noreferrer" variant="contained" color="primary" size="large" startIcon={<Facebook />}>
               Facebook
             </Button>
           </Stack>
