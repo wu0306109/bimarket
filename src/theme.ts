@@ -54,6 +54,9 @@ const theme = createTheme({
         },
         containedPrimary: {
           background: 'linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)',
+          '&:hover': {
+            background: 'linear-gradient(135deg, #6D28D9 0%, #0891B2 100%)', // 在 hover 時顏色變深一點
+          },
         },
       },
     },

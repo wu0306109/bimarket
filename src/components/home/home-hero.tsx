@@ -116,9 +116,7 @@ export default function HomeHero() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
-          <Typography variant="body2" color="textSecondary">
-            BiMarket - 讓購物變得更簡單
-          </Typography>
+         
         </m.div>
       </Box>
     </Container>
