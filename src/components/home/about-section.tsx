@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Card, CardContent, Container, Grid, Stack, Chip, Typography } from '@mui/material';
+import { Box, Card, CardContent, Container, Stack, Chip, Typography } from '@mui/material';
 import { FavoriteBorder, Public, Insights, Language } from '@mui/icons-material';
 import { m } from 'framer-motion';
 
@@ -26,50 +26,52 @@ export default function AboutSection() {
           <Chip label="跨境 · 安心 · 高效率" color="primary" variant="outlined" />
         </Stack>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+        <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={3}> {/* 替換 Grid container */}
+          <Box flex={{ xs: '1 1 100%', md: '1 1 50%' }}> {/* 替換 Grid item */}
             <m.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.05 }}>
               <Card elevation={6} sx={{ height: '100%', borderRadius: 3, background: 'linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.65) 100%)', backdropFilter: 'blur(10px)' }}>
-                <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+                <CardContent sx={{ p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', flexGrow: 1 }}> {/* 新增 flex 樣式 */}
                   <Typography variant="h6" gutterBottom>
                     關於我們
                   </Typography>
-                  <Typography variant="body1" color="textSecondary" paragraph>
-                    在全球化的時代，跨國購物仍常遇到語言隔閡、價格不透明、物流繁瑣等困擾。BiMarket 致力於打造「雙向代購媒合平台」，讓買家與賣家能直接互動，滿足跨境購物的多元需求。
-                  </Typography>
-                  <Typography variant="h6" gutterBottom sx={{ mt: 1.5 }}>
-                    我們的使命
-                  </Typography>
-                  <Box component="ul" sx={{ pl: 3, m: 0 }}>
-                    <Box component="li">
-                      <Typography variant="body1" color="textSecondary">
-                        建立跨國雙向代購平台，滿足消費者多元需求，協助賣家解決存貨問題。
-                      </Typography>
-                    </Box>
-                    <Box component="li">
-                      <Typography variant="body1" color="textSecondary">
-                        提供透明、公平且便捷的交易環境，提升跨境購物體驗。
-                      </Typography>
-                    </Box>
-                    <Box component="li">
-                      <Typography variant="body1" color="textSecondary">
-                        促進全球貿易流通，讓購物成為無國界的生活方式。
-                      </Typography>
+                  <Box sx={{ flexGrow: 1 }}> {/* 用 Box 包裹內容並設定 flexGrow */}
+                    <Typography variant="body1" color="textSecondary" paragraph>
+                      在全球化的時代，跨國購物仍常遇到語言隔閡、價格不透明、物流繁瑣等困擾。BiMarket 致力於打造「雙向代購媒合平台」，讓買家與賣家能直接互動，滿足跨境購物的多元需求。
+                    </Typography>
+                    <Typography variant="h6" gutterBottom sx={{ mt: 1.5 }}>
+                      我們的使命
+                    </Typography>
+                    <Box component="ul" sx={{ pl: 3, m: 0 }}>
+                      <Box component="li">
+                        <Typography variant="body1" color="textSecondary">
+                          建立跨國雙向代購平台，滿足消費者多元需求，協助賣家解決存貨問題。
+                        </Typography>
+                      </Box>
+                      <Box component="li">
+                        <Typography variant="body1" color="textSecondary">
+                          提供透明、公平且便捷的交易環境，提升跨境購物體驗。
+                        </Typography>
+                      </Box>
+                      <Box component="li">
+                        <Typography variant="body1" color="textSecondary">
+                          促進全球貿易流通，讓購物成為無國界的生活方式。
+                        </Typography>
+                      </Box>
                     </Box>
                   </Box>
                 </CardContent>
               </Card>
             </m.div>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} md={6}>
+          <Box flex={{ xs: '1 1 100%', md: '1 1 50%' }}> {/* 替換 Grid item */}
             <m.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
               <Card elevation={6} sx={{ height: '100%', borderRadius: 3, background: 'linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.65) 100%)', backdropFilter: 'blur(10px)' }}>
-                <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+                <CardContent sx={{ p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', flexGrow: 1 }}> {/* 新增 flex 樣式 */}
                   <Typography variant="h6" gutterBottom>
                     我們的特色
                   </Typography>
-                  <Stack spacing={1.5}>
+                  <Stack spacing={1.5} sx={{ flexGrow: 1 }}> {/* 確保 Stack 設定 flexGrow */}
                     <Box display="flex" gap={1.5} alignItems="flex-start">
                       <FavoriteBorder color="error" />
                       <Box>
@@ -110,8 +112,8 @@ export default function AboutSection() {
                 </CardContent>
               </Card>
             </m.div>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         <Box mt={{ xs: 4, md: 6 }} textAlign="center">
           <m.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
