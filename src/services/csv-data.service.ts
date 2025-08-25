@@ -335,4 +335,96 @@ export class CSVDataService {
       throw new Error(`UPDATE_wishCount_ERROR: ${productId}`);
     }
   }
+
+  // 讀取連署記錄
+  private async readPetitions(): Promise<any[]> {
+    try {
+      const petitions = await this.readCSV<any>('wish-petitions.csv');
+      return petitions;
+    } catch (error) {
+      console.error('讀取連署記錄失敗:', error);
+      throw new Error('CSV_READ_ERROR: wish-petitions.csv');
+    }
+  }
+
+  // 寫入連署記錄（全量覆寫）
+  private async writePetitions(petitions: any[]): Promise<void> {
+    try {
+      await this.secureWriteCSV('wish-petitions.csv', petitions);
+    } catch (error) {
+      console.error('寫入連署記錄失敗:', error);
+      throw new Error('CSV_WRITE_ERROR: wish-petitions.csv');
+    }
+  }
+
+  // 檢查使用者是否已對指定商品連署
+  async hasPetition(productId: string, userId: string): Promise<boolean> {
+    const petitions = await this.readPetitions();
+    return petitions.some(
+      (p) => String(p.product_id) === String(productId) && String(p.user_id) === String(userId),
+    );
+  }
+
+  // 新增連署（冪等）並回傳是否有變更
+  async addPetition(productId: string, userId: string): Promise<'added' | 'already' | 'not-found'> {
+    // 確認商品存在
+    const products = await this.readCSV<any>('wish-products.csv');
+    const productIndex = products.findIndex((p) => p.id === productId);
+    if (productIndex === -1) {
+      return 'not-found';
+    }
+
+    const petitions = await this.readPetitions();
+    const exists = petitions.some(
+      (p) => String(p.product_id) === String(productId) && String(p.user_id) === String(userId),
+    );
+
+    if (exists) {
+      return 'already';
+    }
+
+    // 新增記錄
+    petitions.push({ product_id: productId, user_id: userId, timestamp: new Date().toISOString() });
+    await this.writePetitions(petitions);
+
+    // 增加 wishCount
+    const currentCount = Number(products[productIndex].wishCount || 0);
+    products[productIndex].wishCount = currentCount + 1;
+    await this.secureWriteCSV('wish-products.csv', products);
+
+    return 'added';
+  }
+
+  // 取消連署（冪等）並回傳是否有變更
+  async removePetition(
+    productId: string,
+    userId: string,
+  ): Promise<'removed' | 'not-found' | 'none'> {
+    // 確認商品存在
+    const products = await this.readCSV<any>('wish-products.csv');
+    const productIndex = products.findIndex((p) => p.id === productId);
+    if (productIndex === -1) {
+      return 'not-found';
+    }
+
+    const petitions = await this.readPetitions();
+    const beforeLength = petitions.length;
+    const next = petitions.filter(
+      (p) => !(String(p.product_id) === String(productId) && String(p.user_id) === String(userId)),
+    );
+
+    if (next.length === beforeLength) {
+      return 'none';
+    }
+
+    await this.writePetitions(next);
+
+    // 減少 wishCount（最低為 1）
+    const currentCount = Number(products[productIndex].wishCount || 0);
+    const nextCount = Math.max(1, currentCount - 1);
+    products[productIndex].wishCount = nextCount;
+    await this.secureWriteCSV('wish-products.csv', products);
+
+    return 'removed';
+  }
 }
