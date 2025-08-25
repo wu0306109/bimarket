@@ -6,6 +6,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -14,6 +15,8 @@ import {
   Typography,
 } from '@mui/material';
 import { m } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface WishProductCardProps {
   product: WishProduct;
@@ -39,6 +42,9 @@ export function WishProductCard({ product, onClick }: WishProductCardProps) {
 
   // 如果沒有圖片，使用 noimg.png
   const displayImageUrl = imageUrl || '/noimg.png';
+
+  const router = useRouter();
+  const [isBuyable, setIsBuyable] = useState(false); // 新增狀態來追蹤是否已點擊代購按鈕
 
   return (
     <m.div
@@ -166,6 +172,20 @@ export function WishProductCard({ product, onClick }: WishProductCardProps) {
                 </Box>
               </Box>
             </Box>
+            <Button
+              variant="contained"
+              color="secondary"
+              fullWidth
+              sx={{ mt: 2 }}
+              onClick={(e) => {
+                e.stopPropagation(); // 阻止事件向上冒泡到 CardActionArea 的 onClick
+                setIsBuyable(true); // 設定為已點擊
+                router.push(`/sell-product?wishProductId=${product.id}`);
+              }}
+              disabled={isBuyable} // 根據狀態禁用按鈕
+            >
+              {isBuyable ? '已開放代購' : '我可以代購'} {/* 根據狀態顯示不同文字 */}
+            </Button>
           </CardContent>
         </CardActionArea>
       </Card>
