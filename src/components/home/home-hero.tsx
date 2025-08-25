@@ -153,9 +153,13 @@ export default function HomeHero() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
+<<<<<<< Updated upstream
           <Typography variant="body2" color="textSecondary">
             © {new Date().getFullYear()} BiMarket. All rights reserved.
           </Typography>
+=======
+         
+>>>>>>> Stashed changes
         </m.div>
       </Box>
     </Container>
