@@ -1,29 +1,37 @@
 'use client';
 
 import { Favorite, ViewList } from '@mui/icons-material';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import {
   Box,
   Button,
   Card,
   CardContent,
   Container,
-  Grid,
+  IconButton,
+  Stack,
   Typography,
 } from '@mui/material';
+import { grey, pink } from '@mui/material/colors';
 import { m } from 'framer-motion';
-import { pink } from '@mui/material/colors';
 import Link from 'next/link';
 
 export default function HomeHero() {
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
-      <Box textAlign="center" mb={6}>
+      <Box textAlign="center" mb={6} mt={2}>
         <m.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
         >
-          <Typography variant="h2" component="h1" gutterBottom color="primary">
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            textAlign="center"
+            color="primary.dark"
+          >
             歡迎來到 BiMarket
           </Typography>
         </m.div>
@@ -47,8 +55,8 @@ export default function HomeHero() {
         </m.div>
       </Box>
 
-      <Grid container spacing={4} justifyContent="center">
-        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+      <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={4} justifyContent="center">
+        <Box flex={{ xs: '1 1 100%', sm: '1 1 50%', md: '1 1 40%' }}>
           <m.div
             whileHover={{ y: -4 }}
             transition={{ type: 'spring', stiffness: 300, damping: 24 }}
@@ -67,7 +75,7 @@ export default function HomeHero() {
                   href="/wish-product"
                   variant="contained"
                   size="large"
-                  startIcon={<Favorite sx={{ color: 'black' }} />}
+                  startIcon={<Favorite sx={{ color: 'white' }} />}
                   fullWidth
                 >
                   立即許願
@@ -75,9 +83,9 @@ export default function HomeHero() {
               </CardContent>
             </Card>
           </m.div>
-        </Grid>
+        </Box>
 
-        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+        <Box flex={{ xs: '1 1 100%', sm: '1 1 50%', md: '1 1 40%' }}>
           <m.div
             whileHover={{ y: -4 }}
             transition={{ type: 'spring', stiffness: 300, damping: 24 }}
@@ -99,7 +107,7 @@ export default function HomeHero() {
                   variant="contained"
                   color="secondary"
                   size="large"
-                  startIcon={<ViewList />}
+                  startIcon={<ViewList sx={{ color: 'white' }} />}
                   fullWidth
                 >
                   瀏覽清單
@@ -107,20 +115,10 @@ export default function HomeHero() {
               </CardContent>
             </Card>
           </m.div>
-        </Grid>
-      </Grid>
-
-      <Box mt={6} textAlign="center">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          <Typography variant="body2" color="textSecondary">
-            BiMarket - 讓購物變得更簡單
-          </Typography>
-        </m.div>
+        </Box>
       </Box>
+
+      
     </Container>
   );
 }

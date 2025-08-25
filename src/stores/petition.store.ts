@@ -144,5 +144,3 @@ export const usePetitionStore = create<PetitionStore>((set, get) => ({
     }
   },
 }));
-
-
