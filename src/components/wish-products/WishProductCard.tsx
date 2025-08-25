@@ -180,7 +180,8 @@ export function WishProductCard({ product, onClick }: WishProductCardProps) {
               onClick={(e) => {
                 e.stopPropagation(); // 阻止事件向上冒泡到 CardActionArea 的 onClick
                 setIsBuyable(true); // 設定為已點擊
-                router.push(`/sell-product?wishProductId=${product.id}`);
+                // router.push(`/sell-product?wishProductId=${product.id}`); // 移除跳轉頁面
+                router.refresh(); // 重新整理當前頁面
               }}
               disabled={isBuyable} // 根據狀態禁用按鈕
             >
