@@ -19,8 +19,8 @@ import {
 } from '@mui/material';
 import { m } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { usePetitionStore } from '@/stores/petition.store';
-import { Snackbar, Alert } from '@mui/material';
 
 interface WishProductCardProps {
   product: WishProduct;
