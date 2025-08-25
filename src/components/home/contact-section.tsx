@@ -1,14 +1,13 @@
 'use client';
 
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { Email, Telegram, WhatsApp, Facebook } from '@mui/icons-material';
 import { m } from 'framer-motion';
 
 export default function ContactSection() {
   return (
-    <Box sx={{ py: { xs: 6, md: 8 } }}>
-      <Container maxWidth="lg" sx={{ maxWidth: 1000 }}>
-        <Stack spacing={3} alignItems="center" textAlign="center">
+    <Box sx={{ py: { xs: 6, md: 8 }, backgroundColor: 'azure', width: '100%' }}>
+      <Stack spacing={3} alignItems="center" textAlign="center">
           <m.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}>
             <Typography variant="h4" component="h2" gutterBottom>
               聯絡資訊
@@ -33,7 +32,6 @@ export default function ContactSection() {
             </Button>
           </Stack>
         </Stack>
-      </Container>
     </Box>
   );
 }
